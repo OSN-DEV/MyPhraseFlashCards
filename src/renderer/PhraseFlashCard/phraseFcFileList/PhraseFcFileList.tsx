@@ -66,9 +66,25 @@ const PhraseFcFileList = () => {
     }
   }
 
+  const handleSelectFileClick = (id: number) => {
+  }
+
   const handleExportClick = (_: React.MouseEvent<HTMLElement>) => {
     devLog(`handleExportClick`);
   }
+      // {
+      // phraseFcList.map((file) => {
+      //   return (
+      //     <tr key={file.id}>
+      //       <td>{!file.isValid ? '!': ''}</td>
+      //       <td>{file.displayName}</td>
+      //       <td>{file.playCount}</td>
+      //       <td><button onClick={() => handleEditClick(file.id)}>edit</button></td>
+      //       <td><button onClick={() => handleDeleteClick(file.id)}>delete</button></td>
+      //     </tr>
+      //   );
+      // })
+      // }
   
   return(
     <>
@@ -82,21 +98,19 @@ const PhraseFcFileList = () => {
       <table style={{border:"solid 1px silver"}}>
       <thead>
         <tr><th colSpan={2}>displayName</th><th>count</th><th></th><th></th></tr>
+        {
+          phraseFcList.map((file) => 
+            <PhraseFcFile 
+              isSelected = {true}
+              data = {file}
+              handleEditClick = {handleEditClick}
+              handleDeleteClick = {handleDeleteClick}
+              handleSelectFileClick = {handleSelectFileClick}
+            /> 
+          )
+        }
       </thead>
       <tbody>
-      {
-      phraseFcList.map((file) => {
-        return (
-          <tr key={file.id}>
-            <td>{!file.isValid ? '!': ''}</td>
-            <td>{file.displayName}</td>
-            <td>{file.playCount}</td>
-            <td><button onClick={() => handleEditClick(file.id)}>edit</button></td>
-            <td><button onClick={() => handleDeleteClick(file.id)}>delete</button></td>
-          </tr>
-        );
-      })
-      }
       </tbody>
       </table>
     <div>

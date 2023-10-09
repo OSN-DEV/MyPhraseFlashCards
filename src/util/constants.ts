@@ -53,7 +53,28 @@ enum DataKey {
   PhraseFcFile = 'data-key:phrase-fc-file',
 }
 
+/**
+ * 出題順の定義
+ */
+enum OrderDef {
+  /**
+   * 先頭から
+   */
+  FromTheBegining = "fromTheBegining",
+  /**
+   * 出題数が少ない
+   */
+  LessNumberOfQuestion = "lessNumberOfQuestion",
+  /**
+   * 正答率が少ない
+   */
+  LowAccuracyRate = "lowAccuracyRate",
+  /**
+   * ランダム
+   */
+  Random = "reandom",
+}
 
-export { FilePath, EventDef, DataKey }
+export { FilePath, EventDef, DataKey, OrderDef }
 
 
