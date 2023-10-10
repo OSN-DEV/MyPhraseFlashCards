@@ -2,6 +2,8 @@ import React from 'react'
 import { OrderDef } from '../../../util/constants';
 
 const OptionForm = () => {
+  const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
+  
   return(
     <>
       <div>

@@ -6,12 +6,17 @@ import { devLog } from '../../../util/common';
 import { ErrorCode } from '../../../model/ResultModel';
 import { useLocalStorageObject } from '../../../util/UseLocalStorage';
 import { DataKey } from '../../../util/constants';
+import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/PreferenceModel';
+
+type PhraseFcFileListProps = {
+}
 
 const PhraseFcFileList = () => {
   const [phraseFcList, setPhraseFcList] = useLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
   const [currentModel, setCurrentModel] = useState<PhraseFcListModel>(createEmptyPhraseFcListModel());
   const [isShow, setIsShow] = useState<boolean>(false);
-  // let currentModel: PhraseFcListModel = createEmptyPhraseFcListModel();
+  const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
+  // const [selectedIndex, setSelectedIndex] = useState<number>(preference.selectedPhraseFcFileIndex);
 
   const handleEditClick = (id: number) => {
     devLog(`handleEditClick id:${id}`);
@@ -66,7 +71,9 @@ const PhraseFcFileList = () => {
     }
   }
 
-  const handleSelectFileClick = (id: number) => {
+  const handleSelectFileClick = (index: number) => {
+    preference.selectedPhraseFcFileIndex = index;
+    setPreference(preference);
   }
 
   const handleExportClick = (_: React.MouseEvent<HTMLElement>) => {
@@ -97,11 +104,12 @@ const PhraseFcFileList = () => {
         />
       <table style={{border:"solid 1px silver"}}>
       <thead>
-        <tr><th colSpan={2}>displayName</th><th>count</th><th></th><th></th></tr>
+        <tr><th>&nbsp;</th><th>&nbsp;</th><th colSpan={2}>displayName</th><th>count</th><th></th><th></th></tr>
         {
-          phraseFcList.map((file) => 
+          phraseFcList.map((file,index) => 
             <PhraseFcFile 
-              isSelected = {true}
+              index = {index}
+              isSelected = {index === preference.selectedPhraseFcFileIndex}
               data = {file}
               handleEditClick = {handleEditClick}
               handleDeleteClick = {handleDeleteClick}

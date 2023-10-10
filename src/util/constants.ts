@@ -51,6 +51,10 @@ enum DataKey {
    * 現在のフラッシュカード
    */
   PhraseFcFile = 'data-key:phrase-fc-file',
+  /**
+   * プリファレンス
+   */
+  Preference = 'data-key:preference',
 }
 
 /**

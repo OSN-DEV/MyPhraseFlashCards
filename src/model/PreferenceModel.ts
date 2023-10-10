@@ -1,3 +1,5 @@
+import { OrderDef } from "../util/constants";
+
 export const PreferenceSchema = {
   $id: "http://osn.com/schemas/preference-schema.json",
   type: "object",
@@ -8,7 +10,7 @@ export const PreferenceSchema = {
   additionalProperties: false,
 } as const;
 
-export type PreerenceModel = {
+export type PreferenceModel = {
   /**
    * 選択されている文章フレーズファイルのリストインデックス
    */
@@ -16,9 +18,18 @@ export type PreerenceModel = {
   /**
    * 出題数
    */
-  numberOfQuestions: number,
+  numberOfQuestions: string,
   /**
    * 出題順
    */
   orderOfQuestions: string
+}
+
+
+export const createEmptyPreferenceModel = ():PreferenceModel => {
+  return {
+    selectedPhraseFcFileIndex: 0,
+    numberOfQuestions: '',
+    orderOfQuestions: OrderDef.FromTheBegining
+  }
 }
