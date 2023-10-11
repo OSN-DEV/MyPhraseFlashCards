@@ -1,5 +1,6 @@
 import React from 'react'
 import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/PreferenceModel';
+import { devLog } from '../../../util/common';
 import { DataKey, OrderDef } from '../../../util/constants';
 import { useLocalStorageObject } from '../../../util/UseLocalStorage';
 import OptionFormItem from './OptionFormItem';
@@ -12,16 +13,25 @@ const OptionForm = () => {
    ,{ name: 'order', value: OrderDef.LessNumberOfQuestion, displayName: '出題回数が少ない'}
    ,{ name: 'order', value: OrderDef.Random, displayName: 'ランダム'}
   ];
+
   const handleOrderChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(`handleOrderChanged: ${e.currentTarget.value}`);
     setPreference({...preference, orderOfQuestions: e.currentTarget.value});
+  }
+
+  const handleNumberOfQuestionChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(`handleNumberOfQuestionChanged: ${e.currentTarget.value}`);
+    setPreference({...preference, numberOfQuestions: e.currentTarget.value});
   }
 
   return(
     <>
       <div>
         <label>出題数</label>
-        <input type="number" />
+        <input type="number" 
+          defaultValue={preference.numberOfQuestions}
+          onChange={handleNumberOfQuestionChanged}
+        />
         問(省略時は全問)
       </div>
       <div>

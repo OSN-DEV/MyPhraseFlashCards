@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { PhraseFcListModel } from '../../model/PhraseFcListModel';
 import { PhraseFcModel } from '../../model/PhraseFcModel';
-import { devLog } from '../../util/common';
+import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
+import { devLog, getLocalStorageObject } from '../../util/common';
 import { DataKey } from '../../util/constants';
 import { useLocalStorageObject } from '../../util/UseLocalStorage';
 import FlashCard from '../PhraseFcMain/FlashCard';
@@ -13,7 +15,8 @@ type PhraseFcTopProps = {
 
 const PhraseFcTop = (props: PhraseFcTopProps) => {
   devLog(`PhraseFcTop`);
-  const [phraseFcListCount, setPhraseFcListCount] = useState<number>(0);
+  const list = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
+  const [phraseFcListCount, setPhraseFcListCount] = useState<number>(list.length);
   const {onStart} = props;
   return(
     <>

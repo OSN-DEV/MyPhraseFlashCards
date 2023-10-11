@@ -1,46 +1,61 @@
 import path from 'node:path';
 import { BrowserWindow, app, ipcMain, dialog, Menu, ipcRenderer } from 'electron';
-import { EventDef } from '../util/constants';
+import { ProcIfDef } from '../util/constants';
 import { devLog } from '../util/common';
-import { shell } from 'electron'
-import { FilePath } from '../util/constants';
-import { ErrorCode } from '../model/ResultModel';
-
-import { createDataDirectory, importPhraseFcFile, savePhraseFcFileList, showDataFolder } from './file';
+import { createDataDirectory, importPhraseFcFile, loadPhraseFcFile, loadPhraseFcFileList, savePhraseFcFileList, showDataFolder } from './file';
 import { PhraseFcListModel } from '../model/PhraseFcListModel';
+import { PreferenceModel } from '../model/PreferenceModel';
+import { PhraseFcModel } from '../model/PhraseFcModel';
+import { ResultModel } from '../model/ResultModel';
+
 let mainWindow: BrowserWindow | null = null;
 let showDevTool: boolean = false;
 
-const readPreference = () => {
+const handleLoadPhraseFcList = async () => {
 }
 
-const readCurrentFlashCard = () => {
-}
-
-const readPhraseFileList = () => {
-}
-
-const readPhrase = () => {
-}
-
-const saveCurrentFlashCard = () => {
-}
-
-const handleLoadPhraseFcList = async() => {
-}
-
-const handleImportPhraseFcFile = async() => {
+/**
+ * 文章フラッシュカードをインポートする
+ * @returns 文章フラッシュカードのリスト
+ */
+const handleImportPhraseFcFile = async(): Promise<{result: ResultModel, list: PhraseFcListModel[]}> => {
   devLog(`handleImportPhraseFcFile`);
-  const {error, list} = await importPhraseFcFile(mainWindow!);
-  return { code: error.code, list: list}
+  return await importPhraseFcFile(mainWindow!);
 }
 
-const handleSavePhraseFcList = async(list: PhraseFcListModel[]) => {
+/**
+ * 文章フラッシュカードのリストを保存
+ * @param list {PhraseFcListModel[]} 保存するリスト
+ */
+const handleSavePhraseFcList = async (list: PhraseFcListModel[]) => {
   devLog(`handleSavePhraseFcList`);
   savePhraseFcFileList(list);
 }
 
-const toggleDevTool = () => {
+/**
+ * 文章フラッシュカードを読み込む
+ * @param path {string} 文章フラッシュカードのファイルパス
+ * @param pref {PreferenceModel} プリファレンス情報
+ * @returns {PhraseFcModel} prefで条件を絞った文章フラッシュカード
+ */
+const handleLoadPhraseFcFile = async(path: string, pref: PreferenceModel): Promise<{result: ResultModel, file?: PhraseFcModel}> => {
+  devLog(`handleLoadPhraseFcFile`);
+  return await loadPhraseFcFile(path, pref);
+}
+
+/**
+ * 文章フラッシュカードを保存(回数の更新が目的)
+ * @param path {string} 文章フラッシュカードのファイルパス
+ * @param file {PhraseFcModel} 文章フラッシュカード
+ */
+const handleSavePhraseFcFile = async (path: string, file: PhraseFcModel): Promise<ResultModel> => {
+  devLog(`handleSavePhraseFcFile`);
+}
+
+/**
+ * Devツールの表示切替
+ */
+const toggleDevTool = (): void => {
   if (null === mainWindow) {
     return;
   }
@@ -52,8 +67,9 @@ const toggleDevTool = () => {
   showDevTool = !showDevTool;
 }
 
-
-
+/**
+ * メインウィンドウを作成
+ */
 function createWindow() {
   mainWindow = new BrowserWindow({
     webPreferences: {
@@ -63,11 +79,13 @@ function createWindow() {
 
 
   const menu = Menu.buildFromTemplate([
-    {label: 'Debug Menu',
-    submenu:[
-      {label: showDevTool ? 'hide dev tool': 'show dev tool',click:() => toggleDevTool()},
-      {label: 'showDataFolder',click:() => showDataFolder()}, 
-    ]}
+    {
+      label: 'Debug Menu',
+      submenu: [
+        { label: showDevTool ? 'hide dev tool' : 'show dev tool', click: () => toggleDevTool() },
+        { label: 'showDataFolder', click: () => showDataFolder() },
+      ]
+    }
   ])
   Menu.setApplicationMenu(menu)
 
@@ -76,14 +94,20 @@ function createWindow() {
     });
 }
 
+/**
+ * electron event
+ */
 app.whenReady().then(() => {
   createDataDirectory();
   createWindow();
 
   // register event
-  ipcMain.handle(EventDef.ImportPhraseFcFile, handleImportPhraseFcFile);
-  ipcMain.handle(EventDef.SavePhraseFcList, (_, list) => handleSavePhraseFcList(list));
-  ipcMain.handle(EventDef.LoadPhraseFcList, handleLoadPhraseFcList);
+  ipcMain.handle(ProcIfDef.ImportPhraseFcFile, handleImportPhraseFcFile);
+  ipcMain.handle(ProcIfDef.SavePhraseFcList, (_, list) => handleSavePhraseFcList(list));
+  ipcMain.handle(ProcIfDef.LoadPhraseFcList, handleLoadPhraseFcList);
+  ipcMain.handle(ProcIfDef.LoadPhraseFcFile, (_, path, pref) => handleLoadPhraseFcFile(path, pref));
+  ipcMain.handle(ProcIfDef.SavePhraseFcFile, (_, path, file) => handleSavePhraseFcFile(path, file));
+
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -92,7 +116,10 @@ app.whenReady().then(() => {
 
 })
 
-app.on('window-all-closed', function() {
+/**
+ * electron event
+ */
+app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit();
   }

@@ -4,10 +4,11 @@ import { app, BrowserWindow, dialog, shell } from 'electron';
 import fs   from 'fs';
 import path from 'path';
 import { PhraseFcListModel, PhraseFcListSchema } from '../model/PhraseFcListModel';
-import { PhraseFcModel, PhraseFcSchema } from '../model/PhraseFcModel';
-import { ResultModel, ErrorCode } from '../model/ResultModel';
+import { createEmptyPhraseFcModel, PhraseFcModel, PhraseFcSchema } from '../model/PhraseFcModel';
+import { PreferenceModel } from '../model/PreferenceModel';
+import { ResultModel, ResultCode } from '../model/ResultModel';
 import { devLog } from '../util/common';
-import { FilePath } from '../util/constants';
+import { FilePath, OrderDef } from '../util/constants';
 
 /***
  * データフォルダを作成する
@@ -71,12 +72,12 @@ export const loadPhraseFcFileList = async(): Promise<PhraseFcListModel[]> => {
  *   Canceled - ファイル選択をキャンセル
  *   Invalid - 選択したファイルのフォーマット不正
  */
-export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{error: ResultModel, list: PhraseFcListModel[]}> => {
+export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{result: ResultModel, list: PhraseFcListModel[]}> => {
   devLog(`importPhraseFcFile`);
 
-  const createResult = (code: ErrorCode, message: string = "", list: PhraseFcListModel[] = []) => { 
-    const error: ResultModel = { code, message };
-    return { error, list }
+  const createResult = (code: ResultCode, message: string = "", list: PhraseFcListModel[] = []) => { 
+    const result: ResultModel = { code, message };
+    return { result, list }
   }
 
   // select target files
@@ -84,14 +85,14 @@ export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{error: R
     title: "select Phrase Flash Card",
   });
   if (canceled) {
-    return createResult(ErrorCode.Canceled, "user cancel");
+    return createResult(ResultCode.Canceled, "user cancel");
   }
 
   const model: PhraseFcModel  = JSON.parse(fs.readFileSync(filePaths[0], "utf8"));
   const validator = (new Ajv()).compile(PhraseFcSchema);
   if (!validator(model)) {
     console.log(JSON.stringify(validator.errors));
-    return createResult(ErrorCode.Invalid, `file format is wrong\n ${validator.errors}`);
+    return createResult(ResultCode.Invalid, `file format is wrong\n ${validator.errors}`);
   }
 
   // if same id exists, update file path
@@ -122,7 +123,55 @@ export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{error: R
     fs.unlinkSync(filePath);
   }
   fs.writeFileSync(filePath, JSON.stringify(list));
-  return createResult(ErrorCode.None, "", list);
+  return createResult(ResultCode.None, "", list);
 }
 
+export const xxx                  = async(owner: BrowserWindow): Promise< PhraseFcListModel[]> => {
+  return [];
+}
 
+/**
+ * TOP画面の条件に応じた文章フラッシュカードをを返却する
+ * @param path {string} ファイル情報
+ * @param pref {PreferenceModel} 抽出条件
+ * @returns {ResultModel, PhraseFcModel} 処理結果と文章フラッシュカードの情報(施工時のみ)
+ */
+export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Promise<{ result: ResultModel, file?: PhraseFcModel} >  => {
+  const createResult = (code: ResultCode, message: string = "") : {result:ResultModel} => { 
+    const result: ResultModel = { code, message };
+    return { result }
+  }
+
+  // load file
+  const model: PhraseFcModel  = JSON.parse(fs.readFileSync(path, "utf8"));
+  const validator = (new Ajv()).compile(PhraseFcSchema);
+  if (!validator(model)) {
+    console.log(JSON.stringify(validator.errors));
+    return createResult(ResultCode.Invalid, `file format is wrong\n ${validator.errors}`);
+  }
+
+  // sort, limit
+  let orderedPhrases = model.phrases;
+  const randomSort = <T>(list: T[]): T[] => {
+    for (let i = list.length -1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    return list;
+  }
+  switch(pref.orderOfQuestions) {
+    case OrderDef.LessNumberOfQuestion:
+      orderedPhrases = orderedPhrases.sort((a,b) => a.playCount - b.playCount);
+      break;
+    case OrderDef.Random:
+      orderedPhrases = randomSort(orderedPhrases);
+      break;
+  }
+  if (pref.numberOfQuestions !== "") {
+    orderedPhrases = orderedPhrases.slice(0, parseInt(pref.numberOfQuestions));
+  }
+
+  const reuslt: ResultModel = {code: ResultCode.None, message: 'success'};
+  const resultFile = {...model, phrases: orderedPhrases}
+  return {result: reuslt, file: resultFile};
+}

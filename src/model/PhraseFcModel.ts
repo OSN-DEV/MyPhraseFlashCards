@@ -53,3 +53,12 @@ export type PhraseFcModel = {
     }[]
   }[]
 }
+
+export const createEmptyPhraseFcModel = ():PhraseFcModel => {
+  return {
+    id: -1,
+    displayName: '',
+    playCount: 0,
+    phrases: []
+  }
+}

@@ -20,7 +20,7 @@ enum FilePath {
 /**
  * イベント定義
  */
-enum EventDef {
+enum ProcIfDef {
   /**
    * 文章フラッシュカードをインポート
    */
@@ -37,6 +37,16 @@ enum EventDef {
    * 文章フラッシュカードのリストを送信
    */
   SendPhraseFcList = 'my-app:send-phrase-fc-list',
+
+  /**
+   * 文章フラッシュカードの取得
+   */
+  LoadPhraseFcFile = 'my-app:load-phrase-fc-file',
+
+  /**
+   * 文章フラッシュカードの保存
+   */
+  SavePhraseFcFile = 'my-app:load-phrase-fc-file',
 }
 
 /**
@@ -76,9 +86,9 @@ enum OrderDef {
   /**
    * ランダム
    */
-  Random = "reandom",
+  Random = "random",
 }
 
-export { FilePath, EventDef, DataKey, OrderDef }
+export { FilePath, ProcIfDef, DataKey, OrderDef }
 
 

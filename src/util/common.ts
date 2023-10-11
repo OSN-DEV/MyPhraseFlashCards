@@ -28,3 +28,13 @@ export const debugObj =  (obj: any, indent: string = "") => {
     }
     return str + indent + "}";
 };
+
+/**
+ * ローカルストレージの情報を取得
+ * @param key {string} キー
+ * @param initialVlaue {T} 初期値
+ */
+export const getLocalStorageObject = <T>(key: string, initialValue: T): T  => {
+  const storedValue = localStorage.getItem(key);
+  return storedValue ? JSON.parse(storedValue) : initialValue;
+}

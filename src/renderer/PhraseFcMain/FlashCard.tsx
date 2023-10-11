@@ -1,4 +1,5 @@
 import React from 'react'
+import { devLog } from '../../util/common';
 import Header from './Header';
 import OnePhrase from './OnePhrase';
 
@@ -7,8 +8,8 @@ type FlashCardProps = {
 }
 
 const FlashCard = (props: FlashCardProps) => {
+  devLog(`FlashCard`);
   const { onCancel } = props;
-
   return(
     <div>
       FlashCard

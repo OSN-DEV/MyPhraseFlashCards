@@ -3,10 +3,10 @@ import PhraseFcFile from './PhraseFcFile';
 import EditDialog from './editDialog';
 import { PhraseFcListModel, createEmptyPhraseFcListModel } from '../../model/PhraseFcListModel';
 import { devLog } from '../../util/common';
-import { ErrorCode } from '../../model/ResultModel';
 import { useLocalStorageObject } from '../../util/UseLocalStorage';
 import { DataKey } from '../../util/constants';
 import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
+import { ResultCode } from '../../model/ResultModel';
 
 type PhraseFcFileListProps = {
   setPhraseFcListCount : (count: number) => void
@@ -82,9 +82,9 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
    */
   const handleImportClick = async(_: React.MouseEvent<HTMLElement>) => {
     devLog(`handleImportClick`);
-    const { code, list } = await window.mainApi.importPhraseFile();
-    switch(code) {
-      case ErrorCode.None:
+    const { result, list } = await window.mainApi.importPhraseFile();
+    switch(result.code) {
+      case ResultCode.None:
         setPhraseFcList(list);
         setPhraseFcListCount(list.length);
         break;

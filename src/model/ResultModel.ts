@@ -1,7 +1,7 @@
 /**
  * エラーコード
  */
-enum ErrorCode {
+enum ResultCode {
   /**
    * エラーなし
    */
@@ -25,9 +25,9 @@ enum ErrorCode {
 }
 
 type  ResultModel = {
-  code : ErrorCode,
+  code : ResultCode,
   message: string
 }
 
-export { ErrorCode, ResultModel };
+export { ResultCode, ResultModel };
 
