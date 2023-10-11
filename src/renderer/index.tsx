@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-
-import PhraseFlashCard from './PhraseFlashCard';
+import PhraseFcTop from './PhraseFcTop/PhraseFcTop';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <PhraseFlashCard />
+    <PhraseFcTop />
   </React.StrictMode>
 );

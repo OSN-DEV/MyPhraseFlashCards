@@ -1,31 +1,25 @@
 import React, {useState} from 'react'
 import PhraseFcFile from './PhraseFcFile';
 import EditDialog from './editDialog';
-import { PhraseFcListModel, createEmptyPhraseFcListModel } from '../../../model/PhraseFcListModel';
-import { devLog } from '../../../util/common';
-import { ErrorCode } from '../../../model/ResultModel';
-import { useLocalStorageObject } from '../../../util/UseLocalStorage';
-import { DataKey } from '../../../util/constants';
-import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/PreferenceModel';
-
-type PhraseFcFileListProps = {
-}
+import { PhraseFcListModel, createEmptyPhraseFcListModel } from '../../model/PhraseFcListModel';
+import { devLog } from '../../util/common';
+import { ErrorCode } from '../../model/ResultModel';
+import { useLocalStorageObject } from '../../util/UseLocalStorage';
+import { DataKey } from '../../util/constants';
+import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
 
 const PhraseFcFileList = () => {
   const [phraseFcList, setPhraseFcList] = useLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
   const [currentModel, setCurrentModel] = useState<PhraseFcListModel>(createEmptyPhraseFcListModel());
   const [isShow, setIsShow] = useState<boolean>(false);
   const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
-  // const [selectedIndex, setSelectedIndex] = useState<number>(preference.selectedPhraseFcFileIndex);
 
   const handleEditClick = (id: number) => {
     devLog(`handleEditClick id:${id}`);
     const tmpModel = phraseFcList.filter(m => m.id === id);
     if (0 < tmpModel.length) {
-      // currentModel = tmpModel[0];
       setCurrentModel(tmpModel[0]);
     } else {
-      // currentModel = createEmptyPhraseFcListModel();
       setCurrentModel(createEmptyPhraseFcListModel());
       return;
     }
@@ -80,19 +74,6 @@ const PhraseFcFileList = () => {
   const handleExportClick = (_: React.MouseEvent<HTMLElement>) => {
     devLog(`handleExportClick`);
   }
-      // {
-      // phraseFcList.map((file) => {
-      //   return (
-      //     <tr key={file.id}>
-      //       <td>{!file.isValid ? '!': ''}</td>
-      //       <td>{file.displayName}</td>
-      //       <td>{file.playCount}</td>
-      //       <td><button onClick={() => handleEditClick(file.id)}>edit</button></td>
-      //       <td><button onClick={() => handleDeleteClick(file.id)}>delete</button></td>
-      //     </tr>
-      //   );
-      // })
-      // }
   
   return(
     <>
@@ -109,6 +90,7 @@ const PhraseFcFileList = () => {
         {
           phraseFcList.map((file,index) => 
             <PhraseFcFile 
+              key={index}
               index = {index}
               isSelected = {index === preference.selectedPhraseFcFileIndex}
               data = {file}

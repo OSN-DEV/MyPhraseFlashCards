@@ -1,7 +1,4 @@
 import React from 'react'
-import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/PreferenceModel';
-import { DataKey, OrderDef } from '../../../util/constants';
-import { useLocalStorageObject } from '../../../util/UseLocalStorage';
 
 export type OptionFormItemType = {
   name: string,

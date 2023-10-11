@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { devLog } from "../../../util/common";
+import { devLog } from "../../util/common";
 
 type EditDialogProps = {
   id: number,

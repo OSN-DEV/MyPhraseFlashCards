@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { PhraseFcListModel, createEmptyPhraseFcListModel } from '../../../model/PhraseFcListModel';
+import React from 'react'
+import { PhraseFcListModel } from '../../model/PhraseFcListModel';
 
 
 export type PhraseFcFileProps = {
