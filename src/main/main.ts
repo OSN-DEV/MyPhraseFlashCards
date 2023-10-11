@@ -62,7 +62,6 @@ function createWindow() {
   });
 
 
-  // pattern3
   const menu = Menu.buildFromTemplate([
     {label: 'Debug Menu',
     submenu:[
@@ -73,12 +72,8 @@ function createWindow() {
   Menu.setApplicationMenu(menu)
 
   mainWindow.loadFile('dist/index.html')
-    // .then(() => loadPhraseFcFileList())
     .then((data) => {
-      // mainWindow?.webContents.send(EventDef.SendPhraseFcList, JSON.stringify(data));
-      // mainWindow?.webContents.removeAllListeners(EventDef.SendPhraseFcList);
     });
-  // mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -95,10 +90,6 @@ app.whenReady().then(() => {
     }
   });
 
-  // loadPhraseFcFileList()
-  //   .then((result) => {
-  //     console.log(result);
-  //   })
 })
 
 app.on('window-all-closed', function() {

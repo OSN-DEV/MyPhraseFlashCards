@@ -8,12 +8,22 @@ import { useLocalStorageObject } from '../../util/UseLocalStorage';
 import { DataKey } from '../../util/constants';
 import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
 
-const PhraseFcFileList = () => {
+type PhraseFcFileListProps = {
+  setPhraseFcListCount : (count: number) => void
+}
+
+const PhraseFcFileList = (props: PhraseFcFileListProps) => {
   const [phraseFcList, setPhraseFcList] = useLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
   const [currentModel, setCurrentModel] = useState<PhraseFcListModel>(createEmptyPhraseFcListModel());
   const [isShow, setIsShow] = useState<boolean>(false);
   const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
+  const {setPhraseFcListCount} = props;
 
+  
+  /**
+   * 編集クリック
+   * @param id{number} ファイルid
+   */
   const handleEditClick = (id: number) => {
     devLog(`handleEditClick id:${id}`);
     const tmpModel = phraseFcList.filter(m => m.id === id);
@@ -27,11 +37,17 @@ const PhraseFcFileList = () => {
     setIsShow(true);
   }
 
+  /**
+   * 編集ダイアログ キャンセルクリック
+   */
   const handleDialogCancel = () => {
     devLog(`handleDialogCancel`);
     setIsShow(false);
   }
 
+  /**
+   * 編集ダイアログ 保存クリック
+   */
   const handleDialogSave = (id:number, name: string) => {
     devLog(`handleDialogSave id:${id}, name:${name}`);
     console.log(currentModel)
@@ -48,29 +64,46 @@ const PhraseFcFileList = () => {
     setPhraseFcList(newList);
   }
 
+
+  /**
+   * ファイル削除クリック
+   * @param id {number} ファイルID
+   */
   const handleDeleteClick = (id: number) => {
     devLog(`handleDeleteClick id:${id}`);
     const newList = phraseFcList.filter(m => m.id !== id);
     window.mainApi.savePhraseFcFileList(newList);
     setPhraseFcList(newList);
+    setPhraseFcListCount(newList.length);
   }
 
+  /**
+   * インポートクリック
+   */
   const handleImportClick = async(_: React.MouseEvent<HTMLElement>) => {
     devLog(`handleImportClick`);
     const { code, list } = await window.mainApi.importPhraseFile();
     switch(code) {
       case ErrorCode.None:
         setPhraseFcList(list);
+        setPhraseFcListCount(list.length);
         break;
     }
   }
 
+  /**
+   * ファイルリスト内 ファイル選択
+   * @param index{number} リストのインデックス
+   */
   const handleSelectFileClick = (index: number) => {
     devLog(`handleSelectFileClick:${index}`);
     preference.selectedPhraseFcFileIndex = index;
     setPreference({...preference, selectedPhraseFcFileIndex:index});
   }
 
+  /**
+   * エクスポートクリック
+   */
   const handleExportClick = (_: React.MouseEvent<HTMLElement>) => {
     devLog(`handleExportClick`);
   }
