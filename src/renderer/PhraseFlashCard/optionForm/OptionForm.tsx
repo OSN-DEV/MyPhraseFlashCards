@@ -1,9 +1,22 @@
 import React from 'react'
-import { OrderDef } from '../../../util/constants';
+import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/PreferenceModel';
+import { DataKey, OrderDef } from '../../../util/constants';
+import { useLocalStorageObject } from '../../../util/UseLocalStorage';
+import OptionFormItem from './OptionFormItem';
 
 const OptionForm = () => {
   const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
-  
+
+  const RadioData = [
+    { name: 'order', value: OrderDef.FromTheBegining, displayName: '先頭から'}
+   ,{ name: 'order', value: OrderDef.LessNumberOfQuestion, displayName: '出題回数が少ない'}
+   ,{ name: 'order', value: OrderDef.Random, displayName: 'ランダム'}
+  ];
+  const handleOrderChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(`handleOrderChanged: ${e.currentTarget.value}`);
+    setPreference({...preference, orderOfQuestions: e.currentTarget.value});
+  }
+
   return(
     <>
       <div>
@@ -13,14 +26,16 @@ const OptionForm = () => {
       </div>
       <div>
         <label>出題順</label>
-        <input type="radio" name="order" value={OrderDef.FromTheBegining} id="fromTheBegining"/>
-        <label htmlFor="fromTheBegining">先頭から</label>
-        <input type="radio" name="order" value={OrderDef.LessNumberOfQuestion} id="lessNumberOfQuestion"/>
-        <label htmlFor="LessNumberOfQuestion">出題数が少ない</label>
-        <input type="radio" name="order" value={OrderDef.LowAccuracyRate} id="lowAccuracyRate"/>
-        <label htmlFor="lowAccuracyRate">正答率が低い</label>
-        <input type="radio" name="order" value={OrderDef.Random} id="random"/>
-        <label htmlFor="random">ランダム</label>
+        {
+          RadioData.map((data) => (
+            <OptionFormItem
+              key={data.value}
+              {...data}
+              currentValue={preference.orderOfQuestions}
+              onCheckedChanged = {handleOrderChanged}
+              />
+          ))
+        }
       </div>
     </>
   )

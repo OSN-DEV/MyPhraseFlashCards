@@ -72,8 +72,9 @@ const PhraseFcFileList = () => {
   }
 
   const handleSelectFileClick = (index: number) => {
+    devLog(`handleSelectFileClick:${index}`);
     preference.selectedPhraseFcFileIndex = index;
-    setPreference(preference);
+    setPreference({...preference, selectedPhraseFcFileIndex:index});
   }
 
   const handleExportClick = (_: React.MouseEvent<HTMLElement>) => {
