@@ -7,6 +7,8 @@ import PhraseFcFileList from './PhraseFcFileList';
 
 type PhraseFcTopProps = {
    onStart: () => void
+  phraseFcList : PhraseFcListModel[],
+  setPhraseFcList: (list: PhraseFcListModel[]) => void
 }
 
 const PhraseFcTop = (props: PhraseFcTopProps) => {
@@ -14,10 +16,12 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
     // window.mainApi.setWindowTitle('文章フラッシュカード');
   const list = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
   const [phraseFcListCount, setPhraseFcListCount] = useState<number>(list.length);
-  const {onStart} = props;
+  const {onStart, phraseFcList, setPhraseFcList } = props;
   return(
     <>
       <PhraseFcFileList 
+        phraseFcList={phraseFcList}
+        setPhraseFcList={setPhraseFcList}
         setPhraseFcListCount = {setPhraseFcListCount}
       />
       <OptionForm />

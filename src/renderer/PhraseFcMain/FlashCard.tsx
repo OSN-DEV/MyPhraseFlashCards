@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { createFalse } from 'typescript';
 import { createEmptyCurrentPhraseFcModel, CurrentPhraseFcModel } from '../../model/CurrentPhraseFcModel';
-import { devLog } from '../../util/common';
+import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
+import { ResultCode } from '../../model/ResultModel';
+import { devLog, getLocalStorageObject } from '../../util/common';
 import { DataKey } from '../../util/constants';
 import { deleteLocalStorageObject, useLocalStorageObject } from '../../util/UseLocalStorage';
 import Header from './Header';
 import OnePhrase from './OnePhrase';
 
 type FlashCardProps = {
-  onCancel : () => void,
+  onCancel : (realoadList: boolean) => void,
   currentFile: CurrentPhraseFcModel,
   setCurrentFile: (arg:CurrentPhraseFcModel) => void
 }
@@ -23,16 +26,40 @@ const FlashCard = (props: FlashCardProps) => {
   const phrases = currentFile.file.phrases;
 
   const setNext = () => {
-    setCurrentFile({...currentFile, index: currentFile.index + 1});
+    const idx = currentFile.index;
+    currentFile.file.phrases[idx].playCount++;
+    currentFile.index = idx + 1;
+    setCurrentFile({...currentFile});
   }
-  const setComplete = () => {
-    devLog(`complete`);
-    deleteLocalStorageObject(DataKey.PhraseFcFile);
-    onCancel();
+  const handleComplete = async() => {
+    const idx = currentFile.index;
+    const file = currentFile.file;
+    file.phrases[idx].playCount++;
+    let reloadList = false;
+    const pref = getLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
+    if (pref.numberOfQuestions === "") {
+      // 全問の場合はファイルの実行回数をカウントアップ
+      file.playCount++;
+      reloadList = true;
+    }
+    saveAndExit(reloadList);
   }
 
-  const savePhraseFcFile = () => {
+  const handleCancel = () => {
+    saveAndExit();
+  }
 
+  const saveAndExit = async(reloadList: boolean = false) => {
+    const result = await window.mainApi.savePhraseFcFile(currentFile.path, currentFile.file);
+    switch (result.code) {
+      case ResultCode.None:
+        deleteLocalStorageObject(DataKey.PhraseFcFile);
+        onCancel(reloadList);
+        break;
+      default:
+        alert(result.message);
+        break;
+    }
   }
 
   useEffect(() => {
@@ -40,13 +67,13 @@ const FlashCard = (props: FlashCardProps) => {
       switch (e.key) {
         case 'n':
           if (phrases.length <= currentFile.index + 1) {
-            setComplete();
+            handleComplete();
           } else {
             setNext();
           }
           break;
         case 'Escape':
-          onCancel();
+          handleCancel();
           break;
       }
     }
@@ -55,9 +82,6 @@ const FlashCard = (props: FlashCardProps) => {
       document.removeEventListener('keydown', handleKeyDown);
     }
   },[currentFile]);
-
-
-
 
   return(
     <div>
@@ -69,7 +93,7 @@ const FlashCard = (props: FlashCardProps) => {
       <OnePhrase
         phrase={currentFile.file.phrases[currentFile.index]}
        />
-      <button onClick={onCancel}>cancel</button>
+      <button onClick={handleCancel}>cancel</button>
       <footer>
       n:next &nbsp; esc:cancel
       </footer>

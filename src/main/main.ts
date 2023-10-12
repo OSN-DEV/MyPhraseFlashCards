@@ -11,7 +11,11 @@ import { ResultCode, ResultModel } from '../model/ResultModel';
 let mainWindow: BrowserWindow | null = null;
 let showDevTool: boolean = false;
 
+/**
+ * 文章フラシュカードのリストを取得
+ */
 const handleLoadPhraseFcList = async () => {
+  return await loadPhraseFcFileList();
 }
 
 /**

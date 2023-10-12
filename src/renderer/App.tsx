@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HashRouter, Link,Routes, Route } from 'react-router-dom';
 import { createEmptyCurrentPhraseFcModel, CurrentPhraseFcModel } from '../model/CurrentPhraseFcModel';
 import { createEmptyPhraseFcListModel, PhraseFcListModel } from '../model/PhraseFcListModel';
@@ -13,6 +13,7 @@ import PhraseFcTop from "./PhraseFcTop/PhraseFcTop";
 export const App = () => {
   devLog(`App`)
   const [phraseFcFile, setPhraseFcFile] = useLocalStorageObject<CurrentPhraseFcModel>(DataKey.PhraseFcFile, createEmptyCurrentPhraseFcModel());
+  const [phraseFcList, setPhraseFcList] = useLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
 
   useEffect(() => {
     if (0<=phraseFcFile.file.id) {
@@ -20,17 +21,17 @@ export const App = () => {
     }
   },[]);
   const onStart = async() => {
-    console.log('start');
+    devLog('start');
 
     const pref = getLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
     const selectedList = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, [createEmptyPhraseFcListModel()])[pref.selectedPhraseFcFileIndex];
-    devLog(`id: ${selectedList.id}`);
-    devLog(`displayName: ${selectedList.displayName}`);
-    devLog(`filePath: ${selectedList.filePath}`);
+    // devLog(`id: ${selectedList.id}`);
+    // devLog(`displayName: ${selectedList.displayName}`);
+    // devLog(`filePath: ${selectedList.filePath}`);
     const {result, file} = await window.mainApi.loadPhraseFcFile(selectedList.filePath, pref);
     switch(result.code) {
       case ResultCode.None:
-        setPhraseFcFile({index:0, file: file!});
+        setPhraseFcFile({index:0, path:selectedList.filePath, file: file!});
         window.location.href = "#/fc";
         break;
       default:
@@ -39,8 +40,14 @@ export const App = () => {
     }
     // window.location.href = "#/fc";
   }
-  const onCancel = () => {
-    console.log('cancel');
+  const onCancel = async(reloadList: boolean = false) => {
+    devLog('cancel');
+    if (reloadList) {
+
+      const result = await window.mainApi.loadPhraseFcFileList();
+      setPhraseFcList(result);
+      devLog('リスト保存後');
+    }
     window.location.href = "#/top";
   }
 
@@ -57,7 +64,11 @@ export const App = () => {
                                     currentFile= {phraseFcFile}
                                     setCurrentFile={setPhraseFcFile}
                                   />} />
-        <Route path="*" element={<PhraseFcTop onStart={onStart}/>} />
+        <Route path="*" element={<PhraseFcTop 
+                                    phraseFcList={phraseFcList}
+                                    setPhraseFcList={setPhraseFcList}
+                                    onStart={onStart}/>} 
+                                  />
       </Routes>
     </HashRouter>
   );

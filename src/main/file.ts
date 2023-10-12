@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import { warn } from 'console';
 import { app, BrowserWindow, dialog, shell } from 'electron';
 import fs   from 'fs';
-import path from 'path';
+import path, { toNamespacedPath } from 'path';
 import { PhraseFcListModel, PhraseFcListSchema } from '../model/PhraseFcListModel';
 import { createEmptyPhraseFcModel, PhraseFcModel, PhraseFcSchema } from '../model/PhraseFcModel';
 import { PreferenceModel } from '../model/PreferenceModel';
@@ -38,7 +38,7 @@ export const savePhraseFcFileList = async(list: PhraseFcListModel[]) => {
   // if (!fs.existsSync(filePath)) {
   //   fs.unlinkSync(filePath);
   // }
-  // console.log(JSON.stringify(lsit));
+  // devLog(JSON.stringify(lsit));
   fs.writeFileSync(filePath, JSON.stringify(list));
 }
 
@@ -62,7 +62,6 @@ export const loadPhraseFcFileList = async(): Promise<PhraseFcListModel[]> => {
   }
   return model;
 }
-
 
 
 /**
@@ -91,7 +90,7 @@ export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{result: 
   const model: PhraseFcModel  = JSON.parse(fs.readFileSync(filePaths[0], "utf8"));
   const validator = (new Ajv()).compile(PhraseFcSchema);
   if (!validator(model)) {
-    console.log(JSON.stringify(validator.errors));
+    devLog(JSON.stringify(validator.errors));
     return createResult(ResultCode.Invalid, `file format is wrong\n ${validator.errors}`);
   }
 
@@ -143,7 +142,7 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
   const model: PhraseFcModel  = JSON.parse(fs.readFileSync(path, "utf8"));
   const validator = (new Ajv()).compile(PhraseFcSchema);
   if (!validator(model)) {
-    console.log(JSON.stringify(validator.errors));
+    devLog(JSON.stringify(validator.errors));
     return createResult(ResultCode.Invalid, `file format is wrong\n ${validator.errors}`);
   }
 
@@ -175,15 +174,48 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
 
 
 /**
- * 文章フラッシュカードを保存する
+ * 文章フラッシュカードを保存する(回数のみ更新)
  * @param path {string} ファイル情報
  * @param pref {PreferenceModel} 抽出条件
  * @returns {ResultModel, PhraseFcModel} 処理結果と文章フラッシュカードの情報(施工時のみ)
+ * @note フィアル全体のplayCountが更新されている場合はリストも更新する
  */
 export const savePhraseFcFile = async(path: string, model: PhraseFcModel): Promise<ResultModel>  => {
   const createResult = (code: ResultCode, message: string = "") : ResultModel => { 
     const result: ResultModel = { code, message };
     return result;
   }
+
+  const orgModel: PhraseFcModel  = JSON.parse(fs.readFileSync(path, "utf8"));
+  const validator = (new Ajv()).compile(PhraseFcSchema);
+  if (!validator(model)) {
+    devLog(JSON.stringify(validator.errors));
+    return createResult(ResultCode.Invalid, `file format is wrong\n ${validator.errors}`);
+  }
+
+  const newPhrase = orgModel.phrases.map((phrase) => {
+    const match  = model.phrases.find((item) => item.id === phrase.id);
+    if (match) {
+      return {...phrase, playCount: match.playCount}
+    } else {
+      return phrase;
+    }
+  });
+  let isUpdateList = orgModel.playCount !== model.playCount;
+  orgModel.playCount = model.playCount;
+  orgModel.phrases = newPhrase;
+  fs.writeFileSync(path, JSON.stringify(orgModel));
+  if (isUpdateList) {
+    const list = await loadPhraseFcFileList();
+    const newList = list.map((m) => {
+      if (m.id === orgModel.id) {
+        return {...m, playCount: orgModel.playCount}
+      } else {
+        return m;
+      }
+    });
+    savePhraseFcFileList(newList);
+  }
+
   return createResult(ResultCode.None, "");
 }

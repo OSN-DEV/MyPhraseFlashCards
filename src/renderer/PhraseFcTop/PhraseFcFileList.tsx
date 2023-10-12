@@ -10,15 +10,16 @@ import { ResultCode } from '../../model/ResultModel';
 
 type PhraseFcFileListProps = {
   setPhraseFcListCount : (count: number) => void
+  phraseFcList : PhraseFcListModel[],
+  setPhraseFcList: (list: PhraseFcListModel[]) => void
 }
 
 const PhraseFcFileList = (props: PhraseFcFileListProps) => {
-  const [phraseFcList, setPhraseFcList] = useLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
   const [currentModel, setCurrentModel] = useState<PhraseFcListModel>(createEmptyPhraseFcListModel());
   const [isShow, setIsShow] = useState<boolean>(false);
   const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
-  const {setPhraseFcListCount} = props;
-
+  const {phraseFcList, setPhraseFcList, setPhraseFcListCount} = props;
+  
   
   /**
    * 編集クリック
@@ -33,7 +34,6 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
       setCurrentModel(createEmptyPhraseFcListModel());
       return;
     }
-    console.log(currentModel);
     setIsShow(true);
   }
 
@@ -50,7 +50,6 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
    */
   const handleDialogSave = (id:number, name: string) => {
     devLog(`handleDialogSave id:${id}, name:${name}`);
-    console.log(currentModel)
     setIsShow(false);
     const newList = phraseFcList.map(m => {
       if (m.id === currentModel.id) {
@@ -59,7 +58,6 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
         return m;
       }
     });
-    console.log(newList);
     window.mainApi.savePhraseFcFileList(newList);
     setPhraseFcList(newList);
   }

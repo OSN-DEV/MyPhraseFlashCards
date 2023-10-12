@@ -15,12 +15,12 @@ const OptionForm = () => {
   ];
 
   const handleOrderChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(`handleOrderChanged: ${e.currentTarget.value}`);
+    devLog(`handleOrderChanged: ${e.currentTarget.value}`);
     setPreference({...preference, orderOfQuestions: e.currentTarget.value});
   }
 
   const handleNumberOfQuestionChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(`handleNumberOfQuestionChanged: ${e.currentTarget.value}`);
+    devLog(`handleNumberOfQuestionChanged: ${e.currentTarget.value}`);
     setPreference({...preference, numberOfQuestions: e.currentTarget.value});
   }
 

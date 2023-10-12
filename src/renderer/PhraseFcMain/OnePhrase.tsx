@@ -7,11 +7,19 @@ type OnePhraseProps = {
 
 const OnePhrase = (props: OnePhraseProps) => {
   const {phrase} = props;
+  if (!phrase) {
+    return(
+      <>
+        <p>データの読込みに失敗しました。</p>
+      </>
+    )
+  }
+
   return(
     <>
-      <h1>{phrase.header1}</h1>
-      <h2>{phrase.header2}</h2>
-      <h3>{phrase.header3}</h3>
+      {phrase.header1 && <h1>{phrase.header1}</h1>}
+      {phrase.header2 && <h2>{phrase.header2}</h2>}
+      {phrase.header3 && <h3>{phrase.header3}</h3>}
       {
         phrase.paragraphs.map((m,i) => (
             <div key={i}>
@@ -21,8 +29,8 @@ const OnePhrase = (props: OnePhraseProps) => {
           )
         )
       }
-      <aside>{phrase.note}</aside>
-      <aside>times:{phrase.playCount}</aside>
+      { phrase.note && <aside>{phrase.note}</aside>}
+      { phrase.playCount && <aside>times:{phrase.playCount}</aside>}
     </>
   )
 }
