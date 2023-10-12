@@ -36,11 +36,31 @@ export const PhraseFcSchema = {
   additionalProperties: false,
 } as const;
 
+// export type PhraseFcModel = {
+//   id: number,
+//   displayName: string,
+//   playCount: number,
+//   phrases : {
+//     id: number,
+//     header1: string,
+//     header2: string,
+//     header3: string,
+//     playCount: number,
+//     note: string,
+//     paragraphs: {
+//       para: string,
+//       sub: string
+//     }[]
+//   }[]
+// }
 export type PhraseFcModel = {
   id: number,
   displayName: string,
   playCount: number,
-  phrases : {
+  phrases : PhraseModel[]
+}
+
+export type PhraseModel = {
     id: number,
     header1: string,
     header2: string,
@@ -51,8 +71,8 @@ export type PhraseFcModel = {
       para: string,
       sub: string
     }[]
-  }[]
 }
+
 
 export const createEmptyPhraseFcModel = ():PhraseFcModel => {
   return {

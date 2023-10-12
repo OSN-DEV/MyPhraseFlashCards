@@ -1,8 +1,17 @@
 import React from 'react'
 
-const Header = () => {
+type HeaderType = {
+  displayName: string,
+  currentIndex: number
+  totalCount: number,
+}
+const Header = (props: HeaderType) => {
+  const {displayName, currentIndex, totalCount} = props;
   return(
-    <div>Header</div>
+    <>
+      <div>{displayName}</div>
+      <div>{`${currentIndex}/${totalCount}`}</div>
+    </>
   )
 }
 

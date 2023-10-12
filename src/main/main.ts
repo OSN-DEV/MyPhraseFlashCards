@@ -2,11 +2,11 @@ import path from 'node:path';
 import { BrowserWindow, app, ipcMain, dialog, Menu, ipcRenderer } from 'electron';
 import { ProcIfDef } from '../util/constants';
 import { devLog } from '../util/common';
-import { createDataDirectory, importPhraseFcFile, loadPhraseFcFile, loadPhraseFcFileList, savePhraseFcFileList, showDataFolder } from './file';
+import { createDataDirectory, importPhraseFcFile, loadPhraseFcFile, loadPhraseFcFileList, savePhraseFcFile, savePhraseFcFileList, showDataFolder } from './file';
 import { PhraseFcListModel } from '../model/PhraseFcListModel';
 import { PreferenceModel } from '../model/PreferenceModel';
 import { PhraseFcModel } from '../model/PhraseFcModel';
-import { ResultModel } from '../model/ResultModel';
+import { ResultCode, ResultModel } from '../model/ResultModel';
 
 let mainWindow: BrowserWindow | null = null;
 let showDevTool: boolean = false;
@@ -50,6 +50,18 @@ const handleLoadPhraseFcFile = async(path: string, pref: PreferenceModel): Promi
  */
 const handleSavePhraseFcFile = async (path: string, file: PhraseFcModel): Promise<ResultModel> => {
   devLog(`handleSavePhraseFcFile`);
+  const result = await savePhraseFcFile(path, file);
+  return result;
+}
+
+/**
+ * ウィンドウタイトル
+ * @param title {string} タイトル
+ */
+const handleSetWindowTitle = (title: string): void => {
+  if (mainWindow) {
+    mainWindow.setTitle(title);
+  }
 }
 
 /**
@@ -107,6 +119,7 @@ app.whenReady().then(() => {
   ipcMain.handle(ProcIfDef.LoadPhraseFcList, handleLoadPhraseFcList);
   ipcMain.handle(ProcIfDef.LoadPhraseFcFile, (_, path, pref) => handleLoadPhraseFcFile(path, pref));
   ipcMain.handle(ProcIfDef.SavePhraseFcFile, (_, path, file) => handleSavePhraseFcFile(path, file));
+  ipcMain.handle(ProcIfDef.SetWindowTitle, (_, title) => handleSetWindowTitle(title));
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { devLog } from "./common";
 
 /**
  * ローカルストレージ管理
@@ -27,5 +28,12 @@ const useLocalStorageObject = <T>(key: string, initialValue: T): [T, (arg:T) => 
   return [value, setValue];
 }
 
+/**
+ * ローカルストレージのアイテム削除
+ * @param key {string} 削除対象のキー
+ */
+const deleteLocalStorageObject = (key: string): void => {
+  localStorage.removeItem(key);
+}
 
-export {useLocalStorage, useLocalStorageObject }
+export {useLocalStorage, useLocalStorageObject, deleteLocalStorageObject }

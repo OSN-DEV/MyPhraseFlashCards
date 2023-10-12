@@ -46,7 +46,12 @@ enum ProcIfDef {
   /**
    * 文章フラッシュカードの保存
    */
-  SavePhraseFcFile = 'my-app:load-phrase-fc-file',
+  SavePhraseFcFile = 'my-app:save-phrase-fc-file',
+
+  /**
+   * ウィンドウタイトル設定
+   */
+  SetWindowTitle = 'my-app:set-window-title',
 }
 
 /**

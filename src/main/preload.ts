@@ -13,4 +13,5 @@ contextBridge.exposeInMainWorld('mainApi', {
   },
   loadPhraseFcFile: (path: string, pref: PreferenceModel) => ipcRenderer.invoke(ProcIfDef.LoadPhraseFcFile, path, pref),
   savePhraseFcFile: (path: string, file: PhraseFcModel) => ipcRenderer.invoke(ProcIfDef.SavePhraseFcFile, path, file),
+  setWindowTitle: (title: string) => ipcRenderer.invoke(ProcIfDef.SetWindowTitle, title),
 })

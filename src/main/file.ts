@@ -43,7 +43,7 @@ export const savePhraseFcFileList = async(list: PhraseFcListModel[]) => {
 }
 
 /**
- * 文章フラッシュカードモデルの一覧を読み込む。
+ * 文章フラッシュカードの一覧を読込み。
  * リストのファイルの実在判定はこの時点では行わない。
  *
  * @returnis { PhraseFMCListModel } 読み込んだファイル一覧。フィアル未存在時は空の配列
@@ -66,7 +66,7 @@ export const loadPhraseFcFileList = async(): Promise<PhraseFcListModel[]> => {
 
 
 /**
- * フレーズファイルの読込み
+ * 文章フラッシュカードファイルの読込み
  * @param owner { BrowserWindow} オーナーウィンドウ
  * @returns {ErrorCode} 処理結果
  *   Canceled - ファイル選択をキャンセル
@@ -126,12 +126,9 @@ export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{result: 
   return createResult(ResultCode.None, "", list);
 }
 
-export const xxx                  = async(owner: BrowserWindow): Promise< PhraseFcListModel[]> => {
-  return [];
-}
 
 /**
- * TOP画面の条件に応じた文章フラッシュカードをを返却する
+ * TOP画面の条件に応じた文章フラッシュカードを返却する
  * @param path {string} ファイル情報
  * @param pref {PreferenceModel} 抽出条件
  * @returns {ResultModel, PhraseFcModel} 処理結果と文章フラッシュカードの情報(施工時のみ)
@@ -174,4 +171,19 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
   const reuslt: ResultModel = {code: ResultCode.None, message: 'success'};
   const resultFile = {...model, phrases: orderedPhrases}
   return {result: reuslt, file: resultFile};
+}
+
+
+/**
+ * 文章フラッシュカードを保存する
+ * @param path {string} ファイル情報
+ * @param pref {PreferenceModel} 抽出条件
+ * @returns {ResultModel, PhraseFcModel} 処理結果と文章フラッシュカードの情報(施工時のみ)
+ */
+export const savePhraseFcFile = async(path: string, model: PhraseFcModel): Promise<ResultModel>  => {
+  const createResult = (code: ResultCode, message: string = "") : ResultModel => { 
+    const result: ResultModel = { code, message };
+    return result;
+  }
+  return createResult(ResultCode.None, "");
 }

@@ -15,4 +15,5 @@ export interface IMainApi {
   sendPhraseFcFileList: (listener: (event: any, list: PhraseFcListModel[]) => void) => void
   loadPhraseFcFile: (path: string, pref: PreferenceModel) => Promise<{result: ResultModel, file?: PhraseFcModel}>
   savePhraseFcFile: (path: string, file: PhraseFcModel) => Promise<ResultModel>
+  setWindowTitle: (title: string) => void
 }
