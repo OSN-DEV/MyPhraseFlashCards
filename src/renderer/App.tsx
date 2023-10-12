@@ -25,9 +25,6 @@ export const App = () => {
 
     const pref = getLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
     const selectedList = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, [createEmptyPhraseFcListModel()])[pref.selectedPhraseFcFileIndex];
-    // devLog(`id: ${selectedList.id}`);
-    // devLog(`displayName: ${selectedList.displayName}`);
-    // devLog(`filePath: ${selectedList.filePath}`);
     const {result, file} = await window.mainApi.loadPhraseFcFile(selectedList.filePath, pref);
     switch(result.code) {
       case ResultCode.None:
@@ -38,10 +35,9 @@ export const App = () => {
         alert(result.message);
         return;
     }
-    // window.location.href = "#/fc";
   }
-  const onCancel = async(reloadList: boolean = false) => {
-    devLog('cancel');
+  const onExit = async(reloadList: boolean = false) => {
+    devLog('exit');
     if (reloadList) {
 
       const result = await window.mainApi.loadPhraseFcFileList();
@@ -60,7 +56,7 @@ export const App = () => {
       </div>
       <Routes>
         <Route path="fc" element={<FlashCard 
-                                    onCancel={onCancel}
+                                    onExit={onExit}
                                     currentFile= {phraseFcFile}
                                     setCurrentFile={setPhraseFcFile}
                                   />} />

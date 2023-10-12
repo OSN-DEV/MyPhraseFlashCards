@@ -6,7 +6,7 @@ import { createDataDirectory, importPhraseFcFile, loadPhraseFcFile, loadPhraseFc
 import { PhraseFcListModel } from '../model/PhraseFcListModel';
 import { PreferenceModel } from '../model/PreferenceModel';
 import { PhraseFcModel } from '../model/PhraseFcModel';
-import { ResultCode, ResultModel } from '../model/ResultModel';
+import { ResultModel } from '../model/ResultModel';
 
 let mainWindow: BrowserWindow | null = null;
 let showDevTool: boolean = false;
@@ -92,7 +92,6 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-
 
   const menu = Menu.buildFromTemplate([
     {

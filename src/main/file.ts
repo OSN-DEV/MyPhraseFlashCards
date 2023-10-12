@@ -1,10 +1,9 @@
 import Ajv from 'ajv';
-import { warn } from 'console';
 import { app, BrowserWindow, dialog, shell } from 'electron';
 import fs   from 'fs';
-import path, { toNamespacedPath } from 'path';
+import path from 'path';
 import { PhraseFcListModel, PhraseFcListSchema } from '../model/PhraseFcListModel';
-import { createEmptyPhraseFcModel, PhraseFcModel, PhraseFcSchema } from '../model/PhraseFcModel';
+import { PhraseFcModel, PhraseFcSchema } from '../model/PhraseFcModel';
 import { PreferenceModel } from '../model/PreferenceModel';
 import { ResultModel, ResultCode } from '../model/ResultModel';
 import { devLog } from '../util/common';
@@ -19,6 +18,7 @@ export const createDataDirectory = () => {
     fs.mkdirSync(filePath);
   }
 }
+
 
 /***
  * データフォルダを表示する
@@ -35,15 +35,11 @@ export const showDataFolder = () => {
 export const savePhraseFcFileList = async(list: PhraseFcListModel[]) => {
   devLog(`savePhraseFcFileList`);
   const filePath = path.join(app.getPath("appData"), FilePath.PhraseFcList);
-  // if (!fs.existsSync(filePath)) {
-  //   fs.unlinkSync(filePath);
-  // }
-  // devLog(JSON.stringify(lsit));
   fs.writeFileSync(filePath, JSON.stringify(list));
 }
 
 /**
- * 文章フラッシュカードの一覧を読込み。
+ * 文章フラッシュカードの一覧を読込む。
  * リストのファイルの実在判定はこの時点では行わない。
  *
  * @returnis { PhraseFMCListModel } 読み込んだファイル一覧。フィアル未存在時は空の配列

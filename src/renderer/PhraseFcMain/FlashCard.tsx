@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import { createFalse } from 'typescript';
-import { createEmptyCurrentPhraseFcModel, CurrentPhraseFcModel } from '../../model/CurrentPhraseFcModel';
+import React, { useEffect } from 'react'
+import { CurrentPhraseFcModel } from '../../model/CurrentPhraseFcModel';
 import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
 import { ResultCode } from '../../model/ResultModel';
 import { devLog, getLocalStorageObject } from '../../util/common';
 import { DataKey } from '../../util/constants';
-import { deleteLocalStorageObject, useLocalStorageObject } from '../../util/UseLocalStorage';
+import { deleteLocalStorageObject } from '../../util/UseLocalStorage';
 import Header from './Header';
 import OnePhrase from './OnePhrase';
 
 type FlashCardProps = {
-  onCancel : (realoadList: boolean) => void,
+  onExit : (realoadList: boolean) => void,
   currentFile: CurrentPhraseFcModel,
   setCurrentFile: (arg:CurrentPhraseFcModel) => void
 }
 
 const FlashCard = (props: FlashCardProps) => {
   devLog(`FlashCard`);
-  const { onCancel, currentFile, setCurrentFile } = props;
-  // const [currentFile, setCurrentFile] = useLocalStorageObject<CurrentPhraseFcModel>(DataKey.PhraseFcFile, createEmptyCurrentPhraseFcModel());
-  // const [currentIndex, setCurrentIndex] = useState<number>(currentFile.index);
-  
-  // const index = currentFile.index;
-
+  const { onExit, currentFile, setCurrentFile } = props;
   const phrases = currentFile.file.phrases;
 
   const setNext = () => {
@@ -54,7 +48,7 @@ const FlashCard = (props: FlashCardProps) => {
     switch (result.code) {
       case ResultCode.None:
         deleteLocalStorageObject(DataKey.PhraseFcFile);
-        onCancel(reloadList);
+        onExit(reloadList);
         break;
       default:
         alert(result.message);
