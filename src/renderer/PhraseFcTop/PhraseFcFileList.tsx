@@ -7,6 +7,7 @@ import { useLocalStorageObject } from '../../util/UseLocalStorage';
 import { DataKey } from '../../util/constants';
 import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
 import { ResultCode } from '../../model/ResultModel';
+import { createEmptyPhraseFcModel } from '../../model/PhraseFcModel';
 
 type PhraseFcFileListProps = {
   setPhraseFcListCount : (count: number) => void
@@ -15,12 +16,13 @@ type PhraseFcFileListProps = {
 }
 
 const PhraseFcFileList = (props: PhraseFcFileListProps) => {
-  const [currentModel, setCurrentModel] = useState<PhraseFcListModel>(createEmptyPhraseFcListModel());
-  const [isShow, setIsShow] = useState<boolean>(false);
-  const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
   const {phraseFcList, setPhraseFcList, setPhraseFcListCount} = props;
-  
-  
+  const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
+  const [currentModel, setCurrentModel] = useState<PhraseFcListModel>(
+    phraseFcList.length === 0 ? createEmptyPhraseFcListModel() : phraseFcList[preference.selectedPhraseFcFileIndex]
+  );
+  const [isShow, setIsShow] = useState<boolean>(false);
+
   /**
    * 編集クリック
    * @param id{number} ファイルid
@@ -62,7 +64,6 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
     setPhraseFcList(newList);
   }
 
-
   /**
    * ファイル削除クリック
    * @param id {number} ファイルID
@@ -102,8 +103,15 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
   /**
    * エクスポートクリック
    */
-  const handleExportClick = (_: React.MouseEvent<HTMLElement>) => {
+  const handleExportClick =  async(_: React.MouseEvent<HTMLElement>) => {
     devLog(`handleExportClick`);
+    if (0 === phraseFcList.length) {
+      return;
+    }
+    const result = await window.mainApi.exportPhraseFile(currentModel.filePath);
+    if (result.code !== ResultCode.None) {
+      alert(result.message);
+    }
   }
   
   return(

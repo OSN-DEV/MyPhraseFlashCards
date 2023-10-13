@@ -6,7 +6,8 @@ import OptionForm from './optionForm/OptionForm';
 import PhraseFcFileList from './PhraseFcFileList';
 
 type PhraseFcTopProps = {
-   onStart: () => void
+  onStart: () => void,
+  onResume: () => void,
   phraseFcList : PhraseFcListModel[],
   setPhraseFcList: (list: PhraseFcListModel[]) => void
 }
@@ -16,7 +17,7 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
     // window.mainApi.setWindowTitle('文章フラッシュカード');
   const list = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, []);
   const [phraseFcListCount, setPhraseFcListCount] = useState<number>(list.length);
-  const {onStart, phraseFcList, setPhraseFcList } = props;
+  const {onStart, onResume, phraseFcList, setPhraseFcList } = props;
   return(
     <>
       <PhraseFcFileList 
@@ -30,6 +31,12 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
         disabled = {phraseFcListCount === 0}
       >
         Start
+      </button>
+      <button
+        onClick={onResume}
+        disabled = {phraseFcListCount === 0}
+      >
+      Resume
       </button>
     </>
   )

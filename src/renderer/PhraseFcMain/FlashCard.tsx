@@ -4,7 +4,7 @@ import { createEmptyPreferenceModel, PreferenceModel } from '../../model/Prefere
 import { ResultCode } from '../../model/ResultModel';
 import { devLog, getLocalStorageObject } from '../../util/common';
 import { DataKey } from '../../util/constants';
-import { deleteLocalStorageObject } from '../../util/UseLocalStorage';
+import { deleteLocalStorageObject, setCurrentIndex } from '../../util/UseLocalStorage';
 import Header from './Header';
 import OnePhrase from './OnePhrase';
 
@@ -24,8 +24,10 @@ const FlashCard = (props: FlashCardProps) => {
     currentFile.file.phrases[idx].playCount++;
     currentFile.index = idx + 1;
     setCurrentFile({...currentFile});
+    setCurrentIndex(currentFile.path, idx + 1);
   }
   const handleComplete = async() => {
+    setCurrentIndex(currentFile.path, 0);
     const idx = currentFile.index;
     const file = currentFile.file;
     file.phrases[idx].playCount++;

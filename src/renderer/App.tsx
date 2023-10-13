@@ -6,7 +6,7 @@ import { createEmptyPreferenceModel, PreferenceModel } from '../model/Preference
 import { ResultCode } from '../model/ResultModel';
 import { devLog, getLocalStorageObject } from '../util/common';
 import { DataKey } from '../util/constants';
-import { useLocalStorageObject } from '../util/UseLocalStorage';
+import { getCurrentIndex, setCurrentIndex, useLocalStorageObject } from '../util/UseLocalStorage';
 import FlashCard from './PhraseFcMain/FlashCard';
 import PhraseFcTop from "./PhraseFcTop/PhraseFcTop";
 
@@ -20,22 +20,44 @@ export const App = () => {
       window.location.href = "#/fc";
     }
   },[]);
+
+  /** 
+   * 再開
+   */
+  const onResume = async() => {
+    const pref = getLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
+    const selectedList = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, [createEmptyPhraseFcListModel()])[pref.selectedPhraseFcFileIndex];
+    const index = getCurrentIndex(selectedList.filePath);
+    startProc(index); 
+  }
+
+  /**
+   * 開始
+   */
   const onStart = async() => {
     devLog('start');
+    startProc(); 
+  }
 
+  const startProc = async(index: number= 0) => {
     const pref = getLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
     const selectedList = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, [createEmptyPhraseFcListModel()])[pref.selectedPhraseFcFileIndex];
     const {result, file} = await window.mainApi.loadPhraseFcFile(selectedList.filePath, pref);
     switch(result.code) {
       case ResultCode.None:
-        setPhraseFcFile({index:0, path:selectedList.filePath, file: file!});
+        setPhraseFcFile({index:index, path:selectedList.filePath, file: file!});
         window.location.href = "#/fc";
         break;
       default:
         alert(result.message);
         return;
     }
+
   }
+
+  /**
+   * 終了
+   */
   const onExit = async(reloadList: boolean = false) => {
     devLog('exit');
     if (reloadList) {
@@ -63,6 +85,7 @@ export const App = () => {
         <Route path="*" element={<PhraseFcTop 
                                     phraseFcList={phraseFcList}
                                     setPhraseFcList={setPhraseFcList}
+                                    onResume={onResume}
                                     onStart={onStart}/>} 
                                   />
       </Routes>

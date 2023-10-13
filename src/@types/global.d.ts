@@ -10,6 +10,7 @@ declare global {
 }
 export interface IMainApi {
   importPhraseFile: () => Promise<{result: ResultModel, list: PhraseFcListModel[]}>
+  exportPhraseFile: (path:string) => Promise<ResultModel> 
   loadPhraseFcFileList: () => Promise<PhraseFcListModel[]>
   savePhraseFcFileList: (list: PhraseFcListModel[]) => void
   sendPhraseFcFileList: (listener: (event: any, list: PhraseFcListModel[]) => void) => void

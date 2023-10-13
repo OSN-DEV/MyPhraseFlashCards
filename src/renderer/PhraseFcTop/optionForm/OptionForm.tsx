@@ -2,7 +2,7 @@ import React from 'react'
 import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/PreferenceModel';
 import { devLog } from '../../../util/common';
 import { DataKey, OrderDef } from '../../../util/constants';
-import { useLocalStorageObject } from '../../../util/UseLocalStorage';
+import { deleteLocalStorageObject, useLocalStorageObject } from '../../../util/UseLocalStorage';
 import OptionFormItem from './OptionFormItem';
 
 const OptionForm = () => {
@@ -17,11 +17,13 @@ const OptionForm = () => {
   const handleOrderChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     devLog(`handleOrderChanged: ${e.currentTarget.value}`);
     setPreference({...preference, orderOfQuestions: e.currentTarget.value});
+    deleteLocalStorageObject(DataKey.CurrentIndex);
   }
 
   const handleNumberOfQuestionChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     devLog(`handleNumberOfQuestionChanged: ${e.currentTarget.value}`);
     setPreference({...preference, numberOfQuestions: e.currentTarget.value});
+    deleteLocalStorageObject(DataKey.CurrentIndex);
   }
 
   return(

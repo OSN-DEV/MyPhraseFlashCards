@@ -2,7 +2,7 @@ import path from 'node:path';
 import { BrowserWindow, app, ipcMain, dialog, Menu, ipcRenderer } from 'electron';
 import { ProcIfDef } from '../util/constants';
 import { devLog } from '../util/common';
-import { createDataDirectory, importPhraseFcFile, loadPhraseFcFile, loadPhraseFcFileList, savePhraseFcFile, savePhraseFcFileList, showDataFolder } from './file';
+import { createDataDirectory, exportPhraseFile, importPhraseFcFile, loadPhraseFcFile, loadPhraseFcFileList, savePhraseFcFile, savePhraseFcFileList, showDataFolder } from './file';
 import { PhraseFcListModel } from '../model/PhraseFcListModel';
 import { PreferenceModel } from '../model/PreferenceModel';
 import { PhraseFcModel } from '../model/PhraseFcModel';
@@ -25,6 +25,11 @@ const handleLoadPhraseFcList = async () => {
 const handleImportPhraseFcFile = async(): Promise<{result: ResultModel, list: PhraseFcListModel[]}> => {
   devLog(`handleImportPhraseFcFile`);
   return await importPhraseFcFile(mainWindow!);
+}
+
+const handleExportPhraseFcFile = async(path: string): Promise<ResultModel> => {
+  devLog(`handleExportPhraseFcFile`);
+  return await exportPhraseFile(mainWindow!, path);
 }
 
 /**
@@ -118,6 +123,7 @@ app.whenReady().then(() => {
 
   // register event
   ipcMain.handle(ProcIfDef.ImportPhraseFcFile, handleImportPhraseFcFile);
+  ipcMain.handle(ProcIfDef.ExportPhraseFcFile, (_, path) => handleExportPhraseFcFile(path));
   ipcMain.handle(ProcIfDef.SavePhraseFcList, (_, list) => handleSavePhraseFcList(list));
   ipcMain.handle(ProcIfDef.LoadPhraseFcList, handleLoadPhraseFcList);
   ipcMain.handle(ProcIfDef.LoadPhraseFcFile, (_, path, pref) => handleLoadPhraseFcFile(path, pref));

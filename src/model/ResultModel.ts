@@ -31,3 +31,4 @@ type  ResultModel = {
 
 export { ResultCode, ResultModel };
 
+export const createResultModel = (code: ResultCode, message = "") => ({ code, message });

@@ -18,13 +18,19 @@ enum FilePath {
 
 
 /**
- * イベント定義
+ * プロセス間インターフェース定義
  */
 enum ProcIfDef {
   /**
    * 文章フラッシュカードをインポート
    */
   ImportPhraseFcFile = 'my-app:import-phrase-fc-file',
+
+  /**
+   * 文章フラッシュカードをエクスポート
+   */
+  ExportPhraseFcFile  = 'my-app:export-phrase-fc-file',
+  
   /**
    * 文章フラッシュカードリストの取得
    */
@@ -70,6 +76,10 @@ enum DataKey {
    * プリファレンス
    */
   Preference = 'data-key:preference',
+  /**
+   * 現在のインデックス
+   */
+  CurrentIndex = 'data-kye:current-index',
 }
 
 /**

@@ -5,7 +5,7 @@ import path from 'path';
 import { PhraseFcListModel, PhraseFcListSchema } from '../model/PhraseFcListModel';
 import { PhraseFcModel, PhraseFcSchema } from '../model/PhraseFcModel';
 import { PreferenceModel } from '../model/PreferenceModel';
-import { ResultModel, ResultCode } from '../model/ResultModel';
+import { ResultModel, ResultCode, createResultModel } from '../model/ResultModel';
 import { devLog } from '../util/common';
 import { FilePath, OrderDef } from '../util/constants';
 
@@ -78,6 +78,12 @@ export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{result: 
   // select target files
   const { canceled, filePaths } = await dialog.showOpenDialog(owner, {
     title: "select Phrase Flash Card",
+    filters: [
+      {
+        extensions: ['json'],
+        name: 'JSON File',
+      }
+    ]
   });
   if (canceled) {
     return createResult(ResultCode.Canceled, "user cancel");
@@ -121,6 +127,48 @@ export const importPhraseFcFile = async(owner: BrowserWindow): Promise<{result: 
   return createResult(ResultCode.None, "", list);
 }
 
+/**
+ * 文章フラッシュカードファイルを書き出し
+ * まるごと書き出すのではなく、ファイルの再生回数、フレーズのID・回数を書き出す
+ * @param owner { BrowserWindow} オーナーウィンドウ
+ * @param src { string } パス
+ * @returns {ErrorCode} 処理結果
+ *   Canceled - ファイル選択をキャンセル
+ *   Invalid - 選択したファイルのフォーマット不正
+ */
+export const exportPhraseFile = async(owner: BrowserWindow, src: string): Promise<ResultModel> => {
+  devLog(`exportPhraseFcFile`);
+
+  const defaultFile = `${path.dirname(src)}\\${path.basename(src, ".json")}.csv`;
+  // select target files
+  const result = await dialog.showSaveDialog(owner, {
+    title: "select Phrase Flash Card",
+    defaultPath: defaultFile,
+    filters: [
+      {
+        extensions: ['csv'],
+        name: 'CSV file',
+      }
+    ]
+  });
+  if (result.canceled) {
+    return createResultModel(ResultCode.Canceled, 'user cancel');
+  }
+
+  const writeResult = new Promise<ResultModel>(async(resolve, reject) => {
+  const model: PhraseFcModel  = JSON.parse(fs.readFileSync(src, "utf8"));
+    const writer = fs.createWriteStream(result.filePath!);
+    writer.write(`${model.playCount},\r\n`);
+    model.phrases.forEach(phrase => {
+      writer.write(`${phrase.id},${phrase.playCount}\r\n`);
+    });
+    writer.end();
+    writer.on('finish',() => resolve(createResultModel(ResultCode.None)));
+    writer.on('error' ,(err) => reject(createResultModel(ResultCode.Unknown, `fail to write(${err})`)));
+  });
+
+  return writeResult;
+}
 
 /**
  * TOP画面の条件に応じた文章フラッシュカードを返却する

@@ -6,6 +6,7 @@ import { ProcIfDef } from '../util/constants'
 
 contextBridge.exposeInMainWorld('mainApi', {
   importPhraseFile: () => ipcRenderer.invoke(ProcIfDef.ImportPhraseFcFile),
+  exportPhraseFile: (path:string) => ipcRenderer.invoke(ProcIfDef.ExportPhraseFcFile, path),
   savePhraseFcFileList: (list: PhraseFcListModel[]) => ipcRenderer.invoke(ProcIfDef.SavePhraseFcList, list),
   loadPhraseFcFileList: () => ipcRenderer.invoke(ProcIfDef.LoadPhraseFcList),
   sendPhraseFcFileList: (listener: (event: any, list: PhraseFcListModel[]) => void) => {
