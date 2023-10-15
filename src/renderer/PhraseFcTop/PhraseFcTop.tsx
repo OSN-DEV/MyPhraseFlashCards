@@ -25,6 +25,7 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
         setPhraseFcList={setPhraseFcList}
         setPhraseFcListCount = {setPhraseFcListCount}
       />
+      <div>&nbsp;</div>
       <OptionForm />
       <button 
         onClick={onStart}
@@ -33,6 +34,7 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
         Start
       </button>
       <button
+        className='Button'
         onClick={onResume}
         disabled = {phraseFcListCount === 0}
       >

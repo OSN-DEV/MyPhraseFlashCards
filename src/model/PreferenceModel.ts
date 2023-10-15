@@ -35,6 +35,6 @@ export const createEmptyPreferenceModel = ():PreferenceModel => {
     selectedPhraseFcFileIndex: 0,
     currentPhraseFcIndex: 0,
     numberOfQuestions: '',
-    orderOfQuestions: OrderDef.FromTheBegining,
+    orderOfQuestions: OrderDef.FromTheBeginning,
   }
 }

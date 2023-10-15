@@ -3,13 +3,15 @@ import { createEmptyPreferenceModel, PreferenceModel } from '../../../model/Pref
 import { devLog } from '../../../util/common';
 import { DataKey, OrderDef } from '../../../util/constants';
 import { deleteLocalStorageObject, useLocalStorageObject } from '../../../util/UseLocalStorage';
+import InputText from '../../Component/InputText';
+import Label from '../../Component/Label';
 import OptionFormItem from './OptionFormItem';
 
 const OptionForm = () => {
   const [preference, setPreference] = useLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
 
   const RadioData = [
-    { name: 'order', value: OrderDef.FromTheBegining, displayName: '先頭から'}
+    { name: 'order', value: OrderDef.FromTheBeginning, displayName: '先頭から'}
    ,{ name: 'order', value: OrderDef.LessNumberOfQuestion, displayName: '出題回数が少ない'}
    ,{ name: 'order', value: OrderDef.Random, displayName: 'ランダム'}
   ];
@@ -27,17 +29,19 @@ const OptionForm = () => {
   }
 
   return(
-    <>
+    <div className="flex flex-col ml-10">
       <div>
-        <label>出題数</label>
-        <input type="number" 
+        <Label>出題数</Label>
+        <InputText 
+          styles ="text-right mr-2"
           defaultValue={preference.numberOfQuestions}
           onChange={handleNumberOfQuestionChanged}
         />
         問(省略時は全問)
       </div>
-      <div>
-        <label>出題順</label>
+
+      <div className="mt-6">
+        <Label>出題順</Label>
         {
           RadioData.map((data) => (
             <OptionFormItem
@@ -49,7 +53,7 @@ const OptionForm = () => {
           ))
         }
       </div>
-    </>
+    </div>
   )
 }
 

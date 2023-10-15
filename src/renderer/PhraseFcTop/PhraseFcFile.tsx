@@ -1,5 +1,8 @@
 import React from 'react'
 import { PhraseFcListModel } from '../../model/PhraseFcListModel';
+import TextButton from '../Component/TextButton';
+import Td from '../Component/Td';
+import Tr from '../Component/Tr';
 
 
 export type PhraseFcFileProps = {
@@ -15,14 +18,14 @@ const PhraseFcFile = (props: PhraseFcFileProps) => {
   const {index, isSelected, handleEditClick, handleDeleteClick, handleSelectFileClick}  = props;
   return (
     <>
-      <tr key={id}>
-        <td>{!isValid ? '!': ''}</td>
-        <td onClick={() => handleSelectFileClick(index)}>{isSelected ? '●' : ''}</td>
-        <td onClick={() => handleSelectFileClick(index)}>{displayName}</td>
-        <td>{playCount}</td>
-        <td><button onClick={() => handleEditClick(id)}>edit</button></td>
-        <td><button onClick={() => handleDeleteClick(id)}>delete</button></td>
-      </tr>
+      <Tr key={id} isSelected={isSelected}>
+        <Td>{!isValid ? '💣': ''}</Td>
+        <Td styles="cursor-pointer" onClick={() => handleSelectFileClick(index)}>{isSelected ? '🙈' : ''}</Td>
+        <Td styles="cursor-pointer" onClick={() => handleSelectFileClick(index)}>{displayName}</Td>
+        <Td styles="text-right">{playCount}</Td>
+        <Td styles="text-center"><TextButton textColor="cyan" onClick={() => handleEditClick(id)}>edit</TextButton></Td>
+        <Td styles="text-center"><TextButton textColor="red" onClick={() => handleDeleteClick(id)}>delete</TextButton></Td>
+      </Tr>
     </>
   )
 }

@@ -7,7 +7,11 @@ import { useLocalStorageObject } from '../../util/UseLocalStorage';
 import { DataKey } from '../../util/constants';
 import { createEmptyPreferenceModel, PreferenceModel } from '../../model/PreferenceModel';
 import { ResultCode } from '../../model/ResultModel';
-import { createEmptyPhraseFcModel } from '../../model/PhraseFcModel';
+import Table from '../Component/Table';
+import Thead from '../Component/Thead';
+import Th from '../Component/Th';
+import Button from '../Component/Button';
+import Tr from '../Component/Tr';
 
 type PhraseFcFileListProps = {
   setPhraseFcListCount : (count: number) => void
@@ -79,7 +83,7 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
   /**
    * インポートクリック
    */
-  const handleImportClick = async(_: React.MouseEvent<HTMLElement>) => {
+  const handleImportClick = async() => {
     devLog(`handleImportClick`);
     const { result, list } = await window.mainApi.importPhraseFile();
     switch(result.code) {
@@ -103,7 +107,7 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
   /**
    * エクスポートクリック
    */
-  const handleExportClick =  async(_: React.MouseEvent<HTMLElement>) => {
+  const handleExportClick =  async() => {
     devLog(`handleExportClick`);
     if (0 === phraseFcList.length) {
       return;
@@ -123,9 +127,17 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
         onClose= {handleDialogCancel}
         onSave={handleDialogSave}
         />
-      <table style={{border:"solid 1px silver"}}>
-      <thead>
-        <tr><th>&nbsp;</th><th>&nbsp;</th><th colSpan={2}>displayName</th><th>count</th><th></th><th></th></tr>
+      <Table>
+      <Thead>
+        <Tr>
+          <Th>&nbsp;</Th>
+          <Th>&nbsp;</Th>
+          <Th>displayName</Th>
+          <Th>count</Th>
+          <Th colSpanNum={2}></Th>
+        </Tr>
+      </Thead>
+      <tbody>
         {
           phraseFcList.map((file,index) => 
             <PhraseFcFile 
@@ -139,13 +151,11 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
             /> 
           )
         }
-      </thead>
-      <tbody>
       </tbody>
-      </table>
-    <div>
-      <button onClick={handleImportClick}>import</button>
-      <button onClick={handleExportClick}>export</button>
+      </Table>
+    <div className="text-right mt-3">
+      <Button onClick={handleImportClick} styles="mr-3">import</Button>
+      <Button onClick={handleExportClick}>export</Button>
     </div>
 
     </>

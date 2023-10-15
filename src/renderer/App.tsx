@@ -9,7 +9,6 @@ import { DataKey } from '../util/constants';
 import { getCurrentIndex, setCurrentIndex, useLocalStorageObject } from '../util/UseLocalStorage';
 import FlashCard from './PhraseFcMain/FlashCard';
 import PhraseFcTop from "./PhraseFcTop/PhraseFcTop";
-
 export const App = () => {
   devLog(`App`)
   const [phraseFcFile, setPhraseFcFile] = useLocalStorageObject<CurrentPhraseFcModel>(DataKey.PhraseFcFile, createEmptyCurrentPhraseFcModel());
@@ -69,13 +68,17 @@ export const App = () => {
     window.location.href = "#/top";
   }
 
+  /**
+   * 画面遷移時のデバッグ用のメニュー
+  <div>
+    For Deubg<br/>
+    <Link to="/">Top</Link>&nbsp;
+    <Link to="fc">Main</Link>
+  </div>
+  */
+
   return (
     <HashRouter>
-      <div>
-        For Deubg<br/>
-        <Link to="/">Top</Link>&nbsp;
-        <Link to="fc">Main</Link>
-      </div>
       <Routes>
         <Route path="fc" element={<FlashCard 
                                     onExit={onExit}

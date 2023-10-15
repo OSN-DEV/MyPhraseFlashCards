@@ -89,7 +89,7 @@ enum OrderDef {
   /**
    * 先頭から
    */
-  FromTheBegining = "fromTheBegining",
+  FromTheBeginning = "FromTheBeginning",
   /**
    * 出題数が少ない
    */
