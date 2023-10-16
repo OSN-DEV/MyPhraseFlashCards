@@ -86,11 +86,12 @@ const FlashCard = (props: FlashCardProps) => {
         currentIndex={currentFile.index + 1}
         totalCount={currentFile.file.phrases.length}
       />
+      <div className="mt-3"/>
       <OnePhrase
         phrase={currentFile.file.phrases[currentFile.index]}
        />
-      <button onClick={handleCancel}>cancel</button>
-      <footer>
+
+      <footer className="fixed bottom-0 text-center w-full mb-3">
       n:next &nbsp; esc:cancel
       </footer>
     </div>

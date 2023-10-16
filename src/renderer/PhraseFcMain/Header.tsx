@@ -8,10 +8,10 @@ type HeaderType = {
 const Header = (props: HeaderType) => {
   const {displayName, currentIndex, totalCount} = props;
   return(
-    <>
-      <div>{displayName}</div>
+    <header className="flex p-2 bg-cyan-500 text-white">
+      <div className="grow">{displayName}</div>
       <div>{`${currentIndex}/${totalCount}`}</div>
-    </>
+    </header>
   )
 }
 

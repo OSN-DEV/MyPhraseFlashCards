@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { PhraseFcListModel } from '../../model/PhraseFcListModel';
 import { devLog, getLocalStorageObject } from '../../util/common';
 import { DataKey } from '../../util/constants';
+import Button from '../Component/Button';
 import OptionForm from './optionForm/OptionForm';
 import PhraseFcFileList from './PhraseFcFileList';
 
@@ -27,19 +28,21 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
       />
       <div>&nbsp;</div>
       <OptionForm />
-      <button 
-        onClick={onStart}
-        disabled = {phraseFcListCount === 0}
-      >
-        Start
-      </button>
-      <button
-        className='Button'
-        onClick={onResume}
-        disabled = {phraseFcListCount === 0}
-      >
-      Resume
-      </button>
+      <div className="text-center mt-8">
+        <Button
+          styles="mr-3"
+          onClick={onStart}
+          disabled = {phraseFcListCount === 0}
+        >
+          Start
+        </Button>
+        <Button
+          onClick={onResume}
+          disabled = {phraseFcListCount === 0}
+        >
+        Resume
+        </Button>
+      </div>
     </>
   )
 }
