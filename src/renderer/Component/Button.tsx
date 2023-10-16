@@ -14,7 +14,7 @@ const Button = (props: ButtonProps = {disabled: false}) => {
     "bg-cyan-500",
     "hover:bg-cyan-600",
     "active:bg-cyan-700",
-    "w-20",
+    "w-30",
     "px-3",
     "py-1",
     styles ?? '',
