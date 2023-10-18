@@ -8,12 +8,13 @@ const H2 = (props: H2Props) => {
   const {styles, children} = props;
   const styleList: string[] = [
     "text-gray-500",
+    "text-[14pt]",
     "font-bold",
     styles ?? '',
   ]
   return(
     <h2 className={styleList.join(' ').trim()}>
-    &nbsp;&nbsp;{children}
+    {children}
     </h2>
   )
 }

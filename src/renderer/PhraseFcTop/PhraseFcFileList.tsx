@@ -112,9 +112,17 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
     if (0 === phraseFcList.length) {
       return;
     }
-    const result = await window.mainApi.exportPhraseFile(currentModel.filePath);
-    if (result.code !== ResultCode.None) {
-      alert(result.message);
+    const result = await window.mainApi.exportPhraseFile(phraseFcList[preference.selectedPhraseFcFileIndex].filePath);
+    switch (result.code) {
+      case ResultCode.None:
+        // NOP
+        break;
+      case ResultCode.Canceled:
+        // NOP
+        break;
+      default:
+        alert(result.message);
+        break;
     }
   }
   

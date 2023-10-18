@@ -36,7 +36,7 @@ const OnePhrase = (props: OnePhraseProps) => {
       <div className="mt-6" />
       { phrase.note && <aside className="bg-[#00a40026] text-[#003100] my-2 p-2">{phrase.note}</aside>}
       <div className="mt-3" />
-      <aside className="bg-gray-100 my-2 p-2">times:{phrase.playCount}</aside>
+      <aside className="bg-gray-100 my-2 mr-2 p-2 fixed bottom-10 text-center">times:{phrase.playCount}</aside>
     </>
   )
 }

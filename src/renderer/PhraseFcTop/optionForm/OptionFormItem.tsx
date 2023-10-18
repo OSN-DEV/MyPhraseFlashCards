@@ -11,19 +11,6 @@ export type OptionFormItemType = {
 
 const OptionFormItem = (props: OptionFormItemType) => {
   const {name, value, displayName, currentValue, onCheckedChanged} = props;  
-  // return(
-  //   <>
-  //     <input 
-  //       type="radio"
-  //       name={name}
-  //       value={value}
-  //       id={value}
-  //       checked={value === currentValue}
-  //       onChange={onCheckedChanged}
-  //     />
-  //     <label htmlFor={value}>{displayName}</label>
-  //   </>
-  // )
   return(
     <RadioItem 
       name={name}

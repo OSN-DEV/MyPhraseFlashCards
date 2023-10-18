@@ -8,11 +8,12 @@ const H3 = (props: H3Props) => {
   const {styles, children} = props;
   const styleList: string[] = [
     "text-gray-500",
+    "text-[12pt]",
     styles ?? '',
   ]
   return(
     <h3 className={styleList.join(' ').trim()}>
-    &nbsp;&nbsp;&nbsp;&nbsp;{children}
+    {children}
     </h3>
   )
 }
