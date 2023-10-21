@@ -31,16 +31,16 @@ const PhraseFcTop = (props: PhraseFcTopProps) => {
       <div className="text-center mt-8">
         <Button
           styles="mr-3"
-          onClick={onStart}
-          disabled = {phraseFcListCount === 0}
-        >
-          Start
-        </Button>
-        <Button
           onClick={onResume}
           disabled = {phraseFcListCount === 0}
         >
         Resume
+        </Button>
+        <Button
+          onClick={onStart}
+          disabled = {phraseFcListCount === 0}
+        >
+          Start
         </Button>
       </div>
     </>

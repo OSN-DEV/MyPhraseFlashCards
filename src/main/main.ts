@@ -94,7 +94,7 @@ const toggleDevTool = (): void => {
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 700,
-    height: 650,
+    height: 670,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },

@@ -135,6 +135,7 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
         onClose= {handleDialogCancel}
         onSave={handleDialogSave}
         />
+      <div className="h-52 overflow-y-auto">
       <Table>
       <Thead>
         <Tr>
@@ -161,6 +162,7 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
         }
       </tbody>
       </Table>
+      </div>
     <div className="text-right mt-3">
       <Button onClick={handleImportClick} styles="mr-3">import</Button>
       <Button onClick={handleExportClick}>export</Button>

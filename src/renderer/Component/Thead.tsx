@@ -8,6 +8,8 @@ const Thead = (props: TheadProps) => {
   const styleList: string[] = [
     "bg-cyan-500",
     "text-white",
+    "sticky",
+    "top-0",
     styles ?? '',
   ]
   return(
@@ -16,5 +18,4 @@ const Thead = (props: TheadProps) => {
     </thead>
   )
 }
-
 export default Thead;
