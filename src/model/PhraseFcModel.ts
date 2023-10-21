@@ -5,6 +5,7 @@ export const PhraseFcSchema = {
     id: { type: "integer" },
     displayName: { type: "string" },
     playCount: { type: "integer" },
+    hiddenThreshold: {type: "integer"},
     phrases: {
       type: "array",
       items: {
@@ -16,6 +17,7 @@ export const PhraseFcSchema = {
           header3: { type: "string" },
           playCount: { type: "integer" },
           note: { type: "string" },
+          hidden: { type: "boolean" }, 
           paragraphs: {
             type: "array",
             items: {
@@ -40,6 +42,7 @@ export type PhraseFcModel = {
   id: number,
   displayName: string,
   playCount: number,
+  hiddenThreshold: number,
   phrases : PhraseModel[]
 }
 
@@ -50,6 +53,7 @@ export type PhraseModel = {
     header3: string,
     playCount: number,
     note: string,
+    hidden: boolean,
     paragraphs: {
       para: string,
       sub: string
@@ -62,6 +66,7 @@ export const createEmptyPhraseFcModel = ():PhraseFcModel => {
     id: -1,
     displayName: '',
     playCount: 0,
+    hiddenThreshold: 0,
     phrases: []
   }
 }

@@ -160,7 +160,7 @@ export const exportPhraseFile = async(owner: BrowserWindow, src: string): Promis
     const writer = fs.createWriteStream(result.filePath!);
     writer.write(`${model.playCount},\r\n`);
     model.phrases.forEach(phrase => {
-      writer.write(`${phrase.id},${phrase.playCount}\r\n`);
+      writer.write(`${phrase.id},${phrase.playCount},${phrase.hidden}\r\n`);
     });
     writer.end();
     writer.on('finish',() => resolve(createResultModel(ResultCode.None)));
@@ -211,6 +211,8 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
     orderedPhrases = orderedPhrases.slice(0, parseInt(pref.numberOfQuestions));
   }
 
+  orderedPhrases = orderedPhrases.filter((m) => !m.hidden); 
+
   const reuslt: ResultModel = {code: ResultCode.None, message: 'success'};
   const resultFile = {...model, phrases: orderedPhrases}
   return {result: reuslt, file: resultFile};
@@ -240,7 +242,7 @@ export const savePhraseFcFile = async(path: string, model: PhraseFcModel): Promi
   const newPhrase = orgModel.phrases.map((phrase) => {
     const match  = model.phrases.find((item) => item.id === phrase.id);
     if (match) {
-      return {...phrase, playCount: match.playCount}
+      return {...phrase, playCount: match.playCount, hidden: (0 < orgModel.hiddenThreshold && orgModel.hiddenThreshold <= phrase.playCount)}
     } else {
       return phrase;
     }
