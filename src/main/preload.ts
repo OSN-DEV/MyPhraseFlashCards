@@ -12,6 +12,9 @@ contextBridge.exposeInMainWorld('mainApi', {
   sendPhraseFcFileList: (listener: (event: any, list: PhraseFcListModel[]) => void) => {
     ipcRenderer.on(ProcIfDef.SendPhraseFcList, (ev: IpcRendererEvent, list: PhraseFcListModel[]) => listener(ev, list));
   },
+  reset: (listener: (event: any) => void) => {
+    ipcRenderer.on(ProcIfDef.Reset, (ev: IpcRendererEvent) => listener(ev));
+  },
   loadPhraseFcFile: (path: string, pref: PreferenceModel) => ipcRenderer.invoke(ProcIfDef.LoadPhraseFcFile, path, pref),
   savePhraseFcFile: (path: string, file: PhraseFcModel) => ipcRenderer.invoke(ProcIfDef.SavePhraseFcFile, path, file),
   setWindowTitle: (title: string) => ipcRenderer.invoke(ProcIfDef.SetWindowTitle, title),

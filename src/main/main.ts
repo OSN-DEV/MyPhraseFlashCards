@@ -88,6 +88,11 @@ const toggleDevTool = (): void => {
   showDevTool = !showDevTool;
 }
 
+const sendReset = (): void => {
+  mainWindow?.webContents.send(ProcIfDef.Reset);
+  mainWindow?.webContents.removeAllListeners(ProcIfDef.Reset);
+};
+
 /**
  * メインウィンドウを作成
  */
@@ -106,6 +111,7 @@ function createWindow() {
       submenu: [
         { label: showDevTool ? 'hide dev tool' : 'show dev tool', click: () => toggleDevTool() },
         { label: 'showDataFolder', click: () => showDataFolder() },
+        { label: 'reset', click: () => sendReset() },
       ]
     }
   ])

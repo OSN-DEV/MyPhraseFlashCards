@@ -222,8 +222,9 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
 /**
  * 文章フラッシュカードを保存する(回数のみ更新)
  * @param path {string} ファイル情報
- * @param pref {PreferenceModel} 抽出条件
- * @returns {ResultModel, PhraseFcModel} 処理結果と文章フラッシュカードの情報(施工時のみ)
+ * @param model {PhraseFcModel} 更新する情報
+
+ * @returns {ResultModel} 処理結果と文章フラッシュカードの情報(施工時のみ)
  * @note フィアル全体のplayCountが更新されている場合はリストも更新する
  */
 export const savePhraseFcFile = async(path: string, model: PhraseFcModel): Promise<ResultModel>  => {
@@ -242,12 +243,16 @@ export const savePhraseFcFile = async(path: string, model: PhraseFcModel): Promi
   const newPhrase = orgModel.phrases.map((phrase) => {
     const match  = model.phrases.find((item) => item.id === phrase.id);
     if (match) {
-      return {...phrase, playCount: match.playCount, hidden: (0 < orgModel.hiddenThreshold && orgModel.hiddenThreshold <= phrase.playCount)}
+      let hidden = match.hidden;
+      if (!hidden) {
+        hidden = (0 < orgModel.hiddenThreshold && orgModel.hiddenThreshold <= match.playCount);
+      }
+      return {...phrase, playCount: match.playCount, hidden }
     } else {
       return phrase;
     }
   });
-  let isUpdateList = orgModel.playCount !== model.playCount;
+  let isUpdateList = (orgModel.playCount !== model.playCount) ;
   orgModel.playCount = model.playCount;
   orgModel.phrases = newPhrase;
   fs.writeFileSync(path, JSON.stringify(orgModel));

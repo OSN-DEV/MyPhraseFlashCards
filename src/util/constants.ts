@@ -58,6 +58,11 @@ enum ProcIfDef {
    * ウィンドウタイトル設定
    */
   SetWindowTitle = 'my-app:set-window-title',
+
+  /**
+   * リセット(デバッグ用でTOPに戻す)
+   */
+  Reset ='my-app:reset',
 }
 
 /**

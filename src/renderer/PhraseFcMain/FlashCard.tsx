@@ -9,7 +9,7 @@ import Header from './Header';
 import OnePhrase from './OnePhrase';
 
 type FlashCardProps = {
-  onExit : (realoadList: boolean) => void,
+  onExit : (reloadList: boolean) => void,
   currentFile: CurrentPhraseFcModel,
   setCurrentFile: (arg:CurrentPhraseFcModel) => void
 }
@@ -41,11 +41,40 @@ const FlashCard = (props: FlashCardProps) => {
     saveAndExit(reloadList);
   }
 
+  const handleHidden = () => {
+    const idx = currentFile.index;
+    currentFile.file.phrases[idx].hidden = !currentFile.file.phrases[idx].hidden;
+    setCurrentFile({...currentFile});
+  }
+
   const handleCancel = () => {
     saveAndExit();
   }
 
   const saveAndExit = async(reloadList: boolean = false) => {
+    let phrases = currentFile.file.phrases;
+    let id = -1;
+    let endIdx= 0;
+    for (let i=currentFile.index; i < phrases.length; i++) {
+        if (!phrases[i].hidden) {
+          endIdx = i;
+          id = phrases[i].id;
+          break;
+        }
+    }
+    let idx: number;
+    if (id === -1) {
+      idx = 0;
+    } else {
+      idx = -1;
+      for (let i=0; i <= endIdx; i++) {
+          if (!phrases[i].hidden) {
+            idx++;
+          }
+      }
+    }
+    setCurrentIndex(currentFile.path, idx);
+
     const result = await window.mainApi.savePhraseFcFile(currentFile.path, currentFile.file);
     switch (result.code) {
       case ResultCode.None:
@@ -88,7 +117,9 @@ const FlashCard = (props: FlashCardProps) => {
       />
       <div className="mt-3"/>
       <OnePhrase
+        isHidden = {currentFile.file.phrases[currentFile.index].hidden}
         phrase={currentFile.file.phrases[currentFile.index]}
+        handleHidden={handleHidden}
        />
 
       <footer className="fixed bottom-0 text-center w-full mb-3">

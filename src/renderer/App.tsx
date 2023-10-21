@@ -44,6 +44,10 @@ export const App = () => {
     const {result, file} = await window.mainApi.loadPhraseFcFile(selectedList.filePath, pref);
     switch(result.code) {
       case ResultCode.None:
+        if (file?.phrases.length === 0) {
+          alert('表示可能な問題がありません。');
+          return;
+        }
         setPhraseFcFile({index:index, path:selectedList.filePath, file: file!});
         window.location.href = "#/fc";
         break;
@@ -54,13 +58,16 @@ export const App = () => {
 
   }
 
+  window.mainApi.reset((ev:any) => {
+    onExit(false);
+  });
+
   /**
    * 終了
    */
   const onExit = async(reloadList: boolean = false) => {
     devLog('exit');
     if (reloadList) {
-
       const result = await window.mainApi.loadPhraseFcFileList();
       setPhraseFcList(result);
       devLog('リスト保存後');
