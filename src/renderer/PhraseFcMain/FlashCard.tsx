@@ -53,27 +53,29 @@ const FlashCard = (props: FlashCardProps) => {
 
   const saveAndExit = async(reloadList: boolean = false) => {
     let phrases = currentFile.file.phrases;
-    let id = -1;
-    let endIdx= 0;
-    for (let i=currentFile.index; i < phrases.length; i++) {
-        if (!phrases[i].hidden) {
-          endIdx = i;
-          id = phrases[i].id;
-          break;
-        }
-    }
-    let idx: number;
-    if (id === -1) {
-      idx = 0;
-    } else {
-      idx = -1;
-      for (let i=0; i <= endIdx; i++) {
+    if (!reloadList) {
+      let id = -1;
+      let endIdx= 0;
+      for (let i=currentFile.index; i < phrases.length; i++) {
           if (!phrases[i].hidden) {
-            idx++;
+            endIdx = i;
+            id = phrases[i].id;
+            break;
           }
       }
+      let idx: number;
+      if (id === -1) {
+        idx = 0;
+      } else {
+        idx = -1;
+        for (let i=0; i <= endIdx; i++) {
+            if (!phrases[i].hidden) {
+              idx++;
+            }
+        }
+      }
+      setCurrentIndex(currentFile.path, idx);
     }
-    setCurrentIndex(currentFile.path, idx);
 
     const result = await window.mainApi.savePhraseFcFile(currentFile.path, currentFile.file);
     switch (result.code) {
