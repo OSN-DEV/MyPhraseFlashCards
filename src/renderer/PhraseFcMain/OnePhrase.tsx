@@ -4,6 +4,7 @@ import H1 from '../Component/H1'
 import H2 from '../Component/H2'
 import H3 from '../Component/H3'
 import Button from '../Component/Button'
+import Para from '../Component/Para'
 
 type OnePhraseProps = {
   phrase: PhraseModel,
@@ -30,14 +31,14 @@ const OnePhrase = (props: OnePhraseProps) => {
       {
         phrase.paragraphs.map((m,i) => (
             <div key={i} className="mt-2">
-            <p>{m.para}</p>
+            <Para>{m.para}</Para>
             {m.sub && <p className="text-gray-400">{m.sub}</p>}
             </div>
           )
         )
       }
       <div className="mt-6" />
-      { phrase.note && <aside className="bg-[#00a40026] text-[#003100] my-2 p-2">{phrase.note}</aside>}
+      { phrase.note && <Para styles="bg-[#00a40026] text-[#003100] my-2 p-2">{phrase.note}</Para>}
       <div className="mt-3" />
       <aside className="bg-gray-100 my-2 mr-2 p-2 fixed bottom-10 text-center">
         times:{phrase.playCount}
