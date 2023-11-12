@@ -17,21 +17,21 @@ const Para = (props: H1Props) => {
     return <p className={styleList.join(' ').trim()}>{children}</p>
   } else {
     return(
-      <p className={styleList.join(' ').trim()}>
-      {renderTextWithBr(children)}
-      </p>
+      <>
+      {renderTextWithBr(children, styleList.join(' ').trim())}
+      </>
     )
   };
 }
 
-const renderTextWithBr = (text: string) => {
-  const lines = text.split('\n');
+const renderTextWithBr = (text: string, styles: string) => {
+    const lines = text.split('\n');
   return lines.map((line, index) => (
     // <React.Fragment key={index}>
     //   {line}
     //   {index < lines.length - 1 && <br />}
     // </React.Fragment>
-    <p className="p-2" key={index}>
+    <p className={"py-2 " + styles}key={index}>
       {line}
     </p>
   ))
