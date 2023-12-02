@@ -30,9 +30,9 @@ const OnePhrase = (props: OnePhraseProps) => {
       <div className="mt-6"/>
       {
         phrase.paragraphs.map((m,i) => (
-            <div key={i} className="mt-2">
+            <div key={i} className='my-0 py-0'>
             <Para>{m.para}</Para>
-            {m.sub && <p className="text-gray-400">{m.sub}</p>}
+            {m.sub && <Para styles="text-gray-400">{m.sub}</Para>}
             </div>
           )
         )

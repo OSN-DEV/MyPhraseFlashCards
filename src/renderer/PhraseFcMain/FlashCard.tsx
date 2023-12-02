@@ -113,6 +113,7 @@ const FlashCard = (props: FlashCardProps) => {
   return(
     <div>
       <Header 
+        id={currentFile.file.phrases[currentFile.index].id}
         displayName={currentFile.file.displayName}
         currentIndex={currentFile.index + 1}
         totalCount={currentFile.file.phrases.length}
