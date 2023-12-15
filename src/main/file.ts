@@ -199,6 +199,9 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
     }
     return list;
   }
+
+  // orderedPhrases = orderedPhrases.filter((m) => !m.hidden); 
+  orderedPhrases = orderedPhrases.filter((m) => m.playCount < model.hiddenThreshold); 
   switch(pref.orderOfQuestions) {
     case OrderDef.LessNumberOfQuestion:
       orderedPhrases = orderedPhrases.sort((a,b) => a.playCount - b.playCount);
@@ -211,11 +214,9 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
     orderedPhrases = orderedPhrases.slice(0, parseInt(pref.numberOfQuestions));
   }
 
-  orderedPhrases = orderedPhrases.filter((m) => !m.hidden); 
-
-  const reuslt: ResultModel = {code: ResultCode.None, message: 'success'};
+  const result: ResultModel = {code: ResultCode.None, message: 'success'};
   const resultFile = {...model, phrases: orderedPhrases}
-  return {result: reuslt, file: resultFile};
+  return {result: result, file: resultFile};
 }
 
 
@@ -244,9 +245,9 @@ export const savePhraseFcFile = async(path: string, model: PhraseFcModel): Promi
     const match  = model.phrases.find((item) => item.id === phrase.id);
     if (match) {
       let hidden = match.hidden;
-      if (!hidden) {
-        hidden = (0 < orgModel.hiddenThreshold && orgModel.hiddenThreshold <= match.playCount);
-      }
+      // if (!hidden) {
+      //   hidden = (0 < orgModel.hiddenThreshold && orgModel.hiddenThreshold <= match.playCount);
+      // }
       return {...phrase, playCount: match.playCount, hidden }
     } else {
       return phrase;

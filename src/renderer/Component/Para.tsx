@@ -17,7 +17,8 @@ const Para = (props: H1Props) => {
     return <p className={styleList.join(' ').trim()}>{children}</p>
   } else {
     return(
-      <div className="{styleList.join(' ').trim()}">
+      // <div className={styleList.join(' ').trim()}>
+      <div>
       {renderTextWithBr(children, styleList.join(' ').trim())}
       </div>
     )
@@ -27,11 +28,8 @@ const Para = (props: H1Props) => {
 const renderTextWithBr = (text: string, styles: string) => {
   const lines = text.split('\n');
   return lines.map((line, index) => (
-    // <React.Fragment key={index}>
-    //   {line}
-    //   {index < lines.length - 1 && <br />}
-    // </React.Fragment>
-    <p className={"py-2 " + styles} key={index}>
+
+    <p className={styles.indexOf("py") < 0 ? "py-2 " + styles : styles} key={index}>
       {addBr(line)}
     </p>
   ))

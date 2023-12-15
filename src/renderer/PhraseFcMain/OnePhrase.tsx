@@ -25,14 +25,14 @@ const OnePhrase = (props: OnePhraseProps) => {
   return(
     <>
       {phrase.header1 && <H1>{phrase.header1}</H1>}
-      {phrase.header2 && <H2>{phrase.header2}</H2>}
-      {phrase.header3 && <H3>{phrase.header3}</H3>}
+      {phrase.header2 ? <H2>{phrase.header2}</H2> : <H2>&nbsp;</H2>}
+      {phrase.header3 ? <H3>{phrase.header3}</H3> : <H3>&nbsp;</H3>}
       <div className="mt-6"/>
       {
         phrase.paragraphs.map((m,i) => (
             <div key={i} className='my-0 py-0'>
-            <Para>{m.para}</Para>
-            {m.sub && <Para styles="text-gray-400">{m.sub}</Para>}
+            <Para styles={m.sub ? 'py-0' : 'py-2'}>{m.para}</Para>
+            {m.sub && <Para styles="text-gray-400 py-0">{m.sub}</Para>}
             </div>
           )
         )
