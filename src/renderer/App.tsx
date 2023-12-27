@@ -26,7 +26,10 @@ export const App = () => {
   const onResume = async() => {
     const pref = getLocalStorageObject<PreferenceModel>(DataKey.Preference, createEmptyPreferenceModel());
     const selectedList = getLocalStorageObject<PhraseFcListModel[]>(DataKey.PharasFcFileList, [createEmptyPhraseFcListModel()])[pref.selectedPhraseFcFileIndex];
-    const index = getCurrentIndex(selectedList.filePath);
+    let index = getCurrentIndex(selectedList.filePath);
+    if (index < 0) {
+      index = 0;
+    }
     startProc(index); 
   }
 

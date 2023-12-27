@@ -201,7 +201,7 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
   }
 
   // orderedPhrases = orderedPhrases.filter((m) => !m.hidden); 
-  orderedPhrases = orderedPhrases.filter((m) => m.playCount < model.hiddenThreshold); 
+  orderedPhrases = orderedPhrases.filter((m) => m.playCount < model.hiddenThreshold && m.hidden === false); 
   switch(pref.orderOfQuestions) {
     case OrderDef.LessNumberOfQuestion:
       orderedPhrases = orderedPhrases.sort((a,b) => a.playCount - b.playCount);

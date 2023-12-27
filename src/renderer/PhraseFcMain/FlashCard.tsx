@@ -69,7 +69,7 @@ const FlashCard = (props: FlashCardProps) => {
       } else {
         idx = -1;
         for (let i=0; i <= endIdx; i++) {
-            if (!phrases[i].hidden) {
+            if (phrases[i].playCount < currentFile.file.hiddenThreshold) {
               idx++;
             }
         }
