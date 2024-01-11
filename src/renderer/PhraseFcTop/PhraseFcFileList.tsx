@@ -135,7 +135,7 @@ const PhraseFcFileList = (props: PhraseFcFileListProps) => {
         onClose= {handleDialogCancel}
         onSave={handleDialogSave}
         />
-      <div className="h-52 overflow-y-auto">
+      <div className="h-64 overflow-y-auto">
       <Table>
       <Thead>
         <Tr>
