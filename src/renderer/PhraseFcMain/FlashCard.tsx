@@ -57,22 +57,24 @@ const FlashCard = (props: FlashCardProps) => {
       let id = -1;
       let endIdx= 0;
       for (let i=currentFile.index; i < phrases.length; i++) {
-          if (!phrases[i].hidden) {
+          if (!phrases[i].hidden && phrases[i].playCount < currentFile.file.hiddenThreshold) {
             endIdx = i;
             id = phrases[i].id;
             break;
           }
       }
+console.log("###",id);
       let idx: number;
       if (id === -1) {
         idx = 0;
       } else {
         idx = -1;
         for (let i=0; i <= endIdx; i++) {
-            if (phrases[i].playCount < currentFile.file.hiddenThreshold) {
+            if (!phrases[i].hidden && phrases[i].playCount < currentFile.file.hiddenThreshold) {
               idx++;
             }
         }
+console.log("###",idx);
       }
       setCurrentIndex(currentFile.path, idx);
     }
