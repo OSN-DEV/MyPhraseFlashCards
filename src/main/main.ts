@@ -15,6 +15,7 @@ let showDevTool: boolean = false;
  * 文章フラシュカードのリストを取得
  */
 const handleLoadPhraseFcList = async () => {
+  devLog(`handleLoadPhraseFcList`);
   return await loadPhraseFcFileList();
 }
 
@@ -99,7 +100,7 @@ const sendReset = (): void => {
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 700,
-    height: 670,
+    height: 720,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
