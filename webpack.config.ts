@@ -1,5 +1,5 @@
 /** エディタで補完を効かせるために型定義をインポート */
-import { Configuration } from 'webpack';
+import type { Configuration } from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';

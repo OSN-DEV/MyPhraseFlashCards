@@ -204,7 +204,14 @@ export const loadPhraseFcFile = async(path: string, pref: PreferenceModel): Prom
   orderedPhrases = orderedPhrases.filter((m) => m.playCount < model.hiddenThreshold && m.hidden === false); 
   switch(pref.orderOfQuestions) {
     case OrderDef.LessNumberOfQuestion:
-      orderedPhrases = orderedPhrases.sort((a,b) => a.playCount - b.playCount);
+      orderedPhrases = orderedPhrases.sort((a,b) => {
+        if (a.playCount !== b.playCount) {
+          return a.playCount - b.playCount;
+        }
+        
+        // playCount が同じ場合は id でソート
+        return a.id - b.id;
+      });
       break;
     case OrderDef.Random:
       orderedPhrases = randomSort(orderedPhrases);
