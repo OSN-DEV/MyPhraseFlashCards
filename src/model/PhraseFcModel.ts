@@ -5,7 +5,8 @@ export const PhraseFcSchema = {
     id: { type: "integer" },
     displayName: { type: "string" },
     playCount: { type: "integer" },
-    hiddenThreshold: {type: "integer"},
+    hiddenThreshold: { type: "integer" },
+    prevHiddenThreshold: { type: "integer" },
     phrases: {
       type: "array",
       items: {
@@ -17,7 +18,7 @@ export const PhraseFcSchema = {
           header3: { type: "string" },
           playCount: { type: "integer" },
           note: { type: "string" },
-          hidden: { type: "boolean" }, 
+          hidden: { type: "boolean" },
           paragraphs: {
             type: "array",
             items: {
@@ -39,34 +40,35 @@ export const PhraseFcSchema = {
 } as const;
 
 export type PhraseFcModel = {
-  id: number,
-  displayName: string,
-  playCount: number,
-  hiddenThreshold: number,
-  phrases : PhraseModel[]
-}
+  id: number;
+  displayName: string;
+  playCount: number;
+  hiddenThreshold: number;
+  prevHiddenThreshold: number;
+  phrases: PhraseModel[];
+};
 
 export type PhraseModel = {
-    id: number,
-    header1: string,
-    header2: string,
-    header3: string,
-    playCount: number,
-    note: string,
-    hidden: boolean,
-    paragraphs: {
-      para: string,
-      sub: string
-    }[]
-}
+  id: number;
+  header1: string;
+  header2: string;
+  header3: string;
+  playCount: number;
+  note: string;
+  hidden: boolean;
+  paragraphs: {
+    para: string;
+    sub: string;
+  }[];
+};
 
-
-export const createEmptyPhraseFcModel = ():PhraseFcModel => {
+export const createEmptyPhraseFcModel = (): PhraseFcModel => {
   return {
     id: -1,
-    displayName: '',
+    displayName: "",
     playCount: 0,
     hiddenThreshold: 0,
-    phrases: []
-  }
-}
+    prevHiddenThreshold: 0,
+    phrases: [],
+  };
+};
